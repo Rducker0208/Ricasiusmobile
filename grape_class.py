@@ -78,7 +78,7 @@ class Grapes:
                 self.angle += 2
 
         else:
-            ...
+            pass
 
 
 def check_colision(grape: Image, player: Player) -> bool:
