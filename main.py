@@ -7,7 +7,6 @@ from game_over_screen import GameOverScreen
 
 __version__ = '2.3.0'
 
-# test
 
 class RicasiusApp(App):
     """Class that is used to initialise the app"""
