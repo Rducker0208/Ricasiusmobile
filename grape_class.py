@@ -31,8 +31,8 @@ class Grapes:
         self.grapes_on_screen += 1
 
         grape = Scatter(do_scale=False, do_rotation=False, do_translation=False, rotation=0,
-                        scale=.8, pos_hint={'x': random.uniform(0, .9),
-                                            'y': random.uniform(0, .63)})
+                        scale=1.2, pos_hint={'x': random.uniform(0, .9),
+                                             'y': random.uniform(0, .63)})
 
         # // add the grape image to the Scatter widget and add the Scatter widget to the screen
         grape.add_widget(Image(source=grape_image))
@@ -84,7 +84,7 @@ class Grapes:
 def check_colision(grape: Image, player: Player) -> bool:
     """Function that checks if the player is coliding with a grape"""
 
-    if abs(player.player.x - grape.x) < 75 and abs(player.player.y - grape.y) < 75:
+    if abs(player.player.x - grape.x) < 100 and abs(player.player.y - grape.y) < 100:
         return True
     else:
         return False

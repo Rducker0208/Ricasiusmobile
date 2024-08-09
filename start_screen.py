@@ -4,6 +4,7 @@ from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 
 from database_class import database
+from music_client import MusicClient
 from user_class import User
 
 
@@ -28,6 +29,8 @@ class StartScreen(Screen):
         self.start_game_button.bind(on_press=self.start_game)
 
         self.add_widget(start_screen_widgets(self.start_game_button, self.user))
+
+        MusicClient().play_main_theme()
 
     def start_game(self, instance) -> None: # noqa
         self.manager.current = 'game'

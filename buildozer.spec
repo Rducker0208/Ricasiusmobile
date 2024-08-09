@@ -18,7 +18,7 @@ package.domain = org.rducker
 source.dir = .
 
 # (list) Source files to include (leave empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,txt,db
+source.include_exts = py,png,jpg,kv,atlas,txt,db,mp3
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -48,10 +48,10 @@ requirements = python3,kivy,plyer,pillow
 # requirements.source.kivy = ../../kivy
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/data/presplash.png
+presplash.filename = Resources/app_images/zeus_splash_screen.jpg
 
 # (str) Icon of the application
-#icon.filename = %(source.dir)s/data/icon.png
+icon.filename = Resources/app_images/zeus_app_icon.jpg
 
 # (list) Supported orientations
 # Valid options are: landscape, portrait, portrait-reverse or landscape-reverse

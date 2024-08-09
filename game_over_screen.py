@@ -22,6 +22,7 @@ class GameOverScreen(Screen):
 
         self.add_widget(game_over_screen_widgets(self.restart_game_button))
 
+
     def restart_game(self, instance) -> None: # noqa
         self.manager.current = 'start'
 

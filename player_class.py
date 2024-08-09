@@ -64,17 +64,17 @@ class Player:
 
             # // check if player is within boundaries
             if self.x_axis == 'right':
-                if self.player.x < Window.size[0] - self.player.size[0]:
+                if self.player.x < Window.size[0] - self.player.size[0] - 20:
                     self.player.x += self.base_speed * self.speed_x
             else:
-                if self.player.x > 0:
+                if self.player.x > 20:
                     self.player.x -= self.base_speed * (self.speed_x * -1)
 
             if self.y_axis == 'up':
-                if self.player.y < Window.size[1] - Window.size[1] // 2.5:
+                if self.player.y < Window.size[1] - Window.size[1] // 2.2:
                     self.player.y += self.base_speed * self.speed_y
             else:
-                if self.player.y > 0:
+                if self.player.y > 20:
                     self.player.y -= self.base_speed * (self.speed_y * -1)
 
         screen.add_widget(self.player)

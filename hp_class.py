@@ -10,7 +10,7 @@ class hp:
 
     def __init__(self):
         self.hearts = Image(source=f'{heart_dir}/5_hp.png', allow_stretch=True,
-                            size_hint=(.3, .15), pos_hint={'x': .01, 'y': .85})
+                            size_hint=(.2, .1), pos_hint={'x': .01, 'y': .9})
 
     def update_hp(self, screen: Screen, player) -> None:
         """Function that updates healthbar"""

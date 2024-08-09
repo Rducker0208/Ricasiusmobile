@@ -66,17 +66,17 @@ class game_screen_widgets(FloatLayout):
         # // joystick used to register player movement
         joystick = Joystick(
             sticky=False,
-            size_hint=(.25, .25),
-            pos_hint={'x': -.05, 'y': .05}
+            size_hint=(.4, .4),
+            pos_hint={'x': -.1, 'y': .01}
         )
         joystick.bind(pad=self.get_joystick_input)
 
         # // grape image and score label to keep track of player score
         self.score_grape = Image(source=grape_image, allow_stretch=True,
-                                 size_hint=(.1, .1), pos_hint={'x': .9, 'y': .885})
+                                 size_hint=(.07, .1), pos_hint={'x': -0.005, 'y': .81})
 
         self.score_label = Label(text=str(self.user.current_score), font_size=64, color='black',
-                                 size_hint=(.1, .1), pos_hint={'x': .82, 'y': .88})
+                                 size_hint=(.1, .1), pos_hint={'x': .02, 'y': .81})
 
         # // add background
         self.add_widget(Image(source=background_image,
@@ -135,3 +135,4 @@ class game_screen_widgets(FloatLayout):
         # // set player speed in relation to joystick position
         self.player.speed_x = round(x_direction, 2)
         self.player.speed_y = round(y_direction, 2)
+
