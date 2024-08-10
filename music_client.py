@@ -21,3 +21,6 @@ class MusicClient:
         """Stops playing main theme"""
 
         self.main_theme.stop()
+
+
+music_client = MusicClient()

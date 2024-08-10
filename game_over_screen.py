@@ -3,11 +3,12 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 
+from music_client import music_client
 
 # // images used
 # // text acquired from: https://textcraft.net/
 background_image = './Resources/game_over_screen/temple_bg.png'
-you_died_text = './Resources/game_over_screen/game_over.png'
+you_died_text = './Resources/game_over_screen/you_died.png'
 press_to_respawn = './Resources/game_over_screen/press_to_respawn.png'
 
 
@@ -24,6 +25,7 @@ class GameOverScreen(Screen):
 
 
     def restart_game(self, instance) -> None: # noqa
+        music_client.play_main_theme()
         self.manager.current = 'start'
 
 

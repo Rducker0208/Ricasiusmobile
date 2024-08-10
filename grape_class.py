@@ -1,14 +1,13 @@
 import random
 
 from kivy.uix.image import Image
-from kivy.uix.scatter import Scatter
 from kivy.uix.screenmanager import Screen
 
-from player_class import Player
-from user_class import User
+from player_class import player
+from user_class import user
 
 # // Images used
-grape_image = './Resources/game_screen/grape.png'
+grape_image = './Resources/game_screen/grapes/grape_midle.png'
 
 
 class Grapes:
@@ -20,71 +19,102 @@ class Grapes:
         self.grapes: dict[int, Image] = {}
 
         # // variables for graphical purposes
-        self.angle = 24
         self.rotation_direction = 'right'
+        self.rotation_status = 'up'
+        self.rotation_angle = 0
 
-    def create_grape(self, screen: Screen) -> None:
-        """Create a new grape using Kivy's scatter widget, the Scatter widget provides
-        rotation support for the animation of the grapes"""
+    def create_new_grape(self, screen: Screen) -> None:
+        """Create a new grape using Kivy's image class"""
 
         self.grape_id += 1
         self.grapes_on_screen += 1
 
-        grape = Scatter(do_scale=False, do_rotation=False, do_translation=False, rotation=0,
-                        scale=1.2, pos_hint={'x': random.uniform(0, .9),
-                                             'y': random.uniform(0, .63)})
+        # // while loop to avoid grapes spawning inside the joystick
+        while True:
+            x_spawnpoint = random.uniform(0, .9)
+            y_spawnpoint = random.uniform(0, .63)
 
-        # // add the grape image to the Scatter widget and add the Scatter widget to the screen
-        grape.add_widget(Image(source=grape_image))
+            if 0 <= x_spawnpoint <= .22 and 0 <= y_spawnpoint <= .4:
+                pass
+            else:
+                break
+
+        grape = Image(source=f'./Resources/game_screen/grapes/grape_{self.rotation_direction}'
+                             f'_{self.rotation_angle}_degrees.png', allow_stretch=True,
+                      size_hint=(.1, .1), pos_hint={'x': x_spawnpoint, 'y': y_spawnpoint})
+
         self.grapes[self.grape_id] = grape
         screen.add_widget(grape)
 
-    def animate_grape(self, grape: Scatter) -> None:
-        """Animate the grape using Kivy's Scatter widget's rotation variable"""
+    def update_grape_rotations(self) -> None:
+        """Update source image of all grapes to update animations"""
 
-        if self.rotation_direction == 'right':
-            grape.rotation += 2
+        # // check if grape is tilting more or less
+        if self.rotation_status == 'up':
+
+            # // if max rotation is reached start returning to middle point
+            if self.rotation_angle == 30:
+                self.rotation_status = 'down'
+                self.rotation_angle -= 2
+            else:
+                self.rotation_angle += 2
+
         else:
-            grape.rotation -= 2
 
-            # self.angle += 2
-            #
-            # if self.angle == 24:
-            #     self.rotation_direction = 'left'
+            # // if rotation is at middle point
+            if self.rotation_angle == 0:
+                self.rotation_status = 'up'
+                self.rotation_angle += 2
 
-    def update_grapes(self, screen: Screen, player: Player, user: User):
+                # // change direction
+                if self.rotation_direction == 'right':
+                    self.rotation_direction = 'left'
+                else:
+                    self.rotation_direction = 'right'
+            else:
+                self.rotation_angle -= 2
+
+        if self.rotation_angle == 0:
+            for grape in self.grapes.values():
+                grape.source = './Resources/game_screen/grapes/grape_midle.png'
+
+        else:
+
+            # // find grape image according to rotation and direction
+            for grape in self.grapes.values():
+                grape.source = (f'./Resources/game_screen/grapes/grape_{self.rotation_direction}'
+                                f'_{abs(self.rotation_angle)}_degrees.png')
+
+    def update_grapes(self, screen: Screen) -> None:
+        """Update all grapes on screen and check if actions should be performed on them"""
+
+        # // Check if player is coliding with a grape
         grapes_to_delete = []
-
         for grape_id, grape in self.grapes.items():
-            if check_colision(grape, player):
+            if check_colision(grape):
                 grapes_to_delete.append(grape_id)
                 user.current_score += 1
 
+        # // Delete all grapes the player is touching
         for grape_id in grapes_to_delete:
             screen.remove_widget(self.grapes[grape_id])
             self.grapes_on_screen -= 1
             del self.grapes[grape_id]
 
+        # // Create new grape if needed
         if self.grapes_on_screen < 3:
-            self.create_grape(screen)
-        #
-        # for grape in self.grapes.values():
-        #     self.animate_grape(grape)
+            self.create_new_grape(screen)
 
-        if self.rotation_direction == 'right':
-            if self.angle == 24:
-                self.rotation_direction = 'left'
-            else:
-                self.angle += 2
-
-        else:
-            pass
+        self.update_grape_rotations()
 
 
-def check_colision(grape: Image, player: Player) -> bool:
+def check_colision(grape: Image) -> bool:
     """Function that checks if the player is coliding with a grape"""
 
     if abs(player.player.x - grape.x) < 100 and abs(player.player.y - grape.y) < 100:
         return True
     else:
         return False
+
+
+grapes = Grapes()

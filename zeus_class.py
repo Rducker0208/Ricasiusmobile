@@ -54,3 +54,5 @@ class Zeus:
 
         screen.add_widget(self.zeus)
 
+
+zeus = Zeus()

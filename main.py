@@ -1,3 +1,5 @@
+import kivy
+
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 
@@ -5,7 +7,7 @@ from start_screen import StartScreen
 from game_screen import GameScreen
 from game_over_screen import GameOverScreen
 
-__version__ = '2.3.0'
+kivy.require('2.3.0')
 
 
 class RicasiusApp(App):

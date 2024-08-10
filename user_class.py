@@ -2,8 +2,7 @@ import os
 import PIL.Image
 
 from plyer.facades import UniqueID
-
-from database_class import database
+from database_class import db
 
 
 class User:
@@ -11,7 +10,7 @@ class User:
 
     def __init__(self):
         self.username = get_username()
-        self.highscore = database(self.username).load_user()
+        self.highscore = db.load_user(self.username)
         self.current_score = 0
 
     def create_score_image(self, mode: str) -> None:
@@ -44,9 +43,12 @@ def get_username() -> str:
     """Use os module to see if user is on windows and otherwise use plyer to get user id"""
 
     if os.name == 'nt':
-        user = os.getlogin()
+        user_name = os.getlogin()
     else:
-        user = str(UniqueID.id)
-        print(f'user: {user}')
+        user_name = str(UniqueID.id)
+        print(f'user: {user_name}')
 
-    return user
+    return user_name
+
+
+user = User()

@@ -78,3 +78,5 @@ class Player:
                     self.player.y -= self.base_speed * (self.speed_y * -1)
 
         screen.add_widget(self.player)
+
+player = Player()
