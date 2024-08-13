@@ -1,39 +1,62 @@
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
+from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 
 from music_client import music_client
+from player_class import player
+from start_screen import StartScreen
+from user_class import user
+
 
 # // images used
 # // text acquired from: https://textcraft.net/
 background_image = './Resources/game_over_screen/temple_bg.png'
 you_died_text = './Resources/game_over_screen/you_died.png'
-press_to_respawn = './Resources/game_over_screen/press_to_respawn.png'
+new_highscore_text = './Resources/game_over_screen/new-highscore.png'
+highscore_text = './Resources/game_over_screen/highscore_text.png'
+highscore = './Resources/game_over_screen/highscore.png'
+score_text = './Resources/game_over_screen/score_text.png'
+score = './Resources/game_over_screen/score.png'
+press_to_respawn_text = './Resources/game_over_screen/press_to_respawn.png'
 
 
 class GameOverScreen(Screen):
     """Class that handles the screen displayed on death of the player"""
 
-    def __init__(self, **kwargs):
+    def __init__(self, new_highscore: bool, **kwargs):
         super(GameOverScreen, self).__init__(**kwargs)
+        self.new_highscore = new_highscore
+        self.game_end = True
 
         self.restart_game_button = Button(background_color=(0, 0, 0, 0))
         self.restart_game_button.bind(on_press=self.restart_game)
 
-        self.add_widget(game_over_screen_widgets(self.restart_game_button))
+        # // Images only need to be added when the game ends
+        if self.game_end:
+            self.add_widget(game_over_screen_widgets(self.new_highscore, self.restart_game_button))
 
 
     def restart_game(self, instance) -> None: # noqa
+        """Function that reset's game variables so the game can restart"""
+
         music_client.play_main_theme()
+        user.current_score = 0
+        player.hp = 5
+
+        # // Readd start screen so highscore can be refreshed
+        self.manager.remove_widget(self.manager.get_screen(name='start'))
+        self.manager.add_widget(StartScreen(name='start'))
         self.manager.current = 'start'
 
 
 class game_over_screen_widgets(FloatLayout):
     """Class containing all widgets for game over screen"""
 
-    def __init__(self, restart_game_button: Button, **kwargs):
+    def __init__(self, new_highscore: bool, restart_game_button: Button, **kwargs):
         super(game_over_screen_widgets, self).__init__(**kwargs)
+        print(user.highscore)
 
         self.restart_game_button = restart_game_button
 
@@ -42,10 +65,30 @@ class game_over_screen_widgets(FloatLayout):
         self.add_widget(Image(source=you_died_text, allow_stretch=True,
                               size_hint=(.6, .2), pos_hint={'x': .2, 'y': .75}))
 
-        self.add_widget(Image(source=press_to_respawn, allow_stretch=True,
-                              size_hint=(.5, .15), pos_hint={'x': .26, 'y': .1}))
+        self.add_widget(Image(source=press_to_respawn_text, allow_stretch=True,
+                              size_hint=(.5, .15), pos_hint={'x': .26, 'y': .001}))
 
         self.add_widget(self.restart_game_button)
 
+        # // check which screen to display
+        if new_highscore:
+            self.add_widget(Image(source=new_highscore_text, allow_stretch=True,
+                                  size_hint=(.6, .15), pos_hint={'x': .2, 'y': .6}))
+
+            self.add_widget(Label(text=str(user.highscore), font_size=192,
+                                  size_hint=(.6, .175), pos_hint={'x': .2, 'y': .4}))
+
+        else:
+            self.add_widget(Image(source=score_text, allow_stretch=True,
+                                  size_hint=(.4, .125), pos_hint={'x': .3, 'y': .6}))
+
+            self.add_widget(Label(text=str(user.current_score), font_size=128,
+                                  size_hint=(.3, .15), pos_hint={'x': .35, 'y': .44}))
+
+            self.add_widget(Image(source=highscore_text, allow_stretch=True,
+                                  size_hint=(.4, .125), pos_hint={'x': .3, 'y': .3}))
+
+            self.add_widget(Label(text=str(user.highscore), font_size=128,
+                                  size_hint=(.3, .15), pos_hint={'x': .35, 'y': .15}))
 
 

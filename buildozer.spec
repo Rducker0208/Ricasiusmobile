@@ -34,7 +34,7 @@ source.exclude_dirs = tests, bin, venv, Ricassius
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 1.4.0
+version = 1.4.10
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]

@@ -3,9 +3,11 @@ import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 
-from start_screen import StartScreen
-from game_screen import GameScreen
 from game_over_screen import GameOverScreen
+from game_screen import GameScreen
+from login_screen import LoginScreen
+from start_screen import StartScreen
+from user_class import user
 
 kivy.require('2.3.0')
 
@@ -20,12 +22,19 @@ class RicasiusApp(App):
         self.sm = ScreenManager(transition=NoTransition())
 
     def build(self) -> ScreenManager:
-
-        self.sm.add_widget(StartScreen(name='start'))
         self.sm.add_widget(GameScreen(name='game'))
-        self.sm.add_widget(GameOverScreen(name='game_over'))
+        self.sm.add_widget(GameOverScreen(False, name='game_over'))
 
-        self.sm.current = 'start'
+        # // Check if user should log in
+        if not user.username:
+            print('1')
+            self.sm.add_widget(LoginScreen(name='login'))
+            self.sm.current = 'login'
+        else:
+            print('2')
+            user.create_score_image(mode='highscore')
+            self.sm.add_widget(StartScreen(name='start'))
+            self.sm.current = 'start'
 
         return self.sm
 

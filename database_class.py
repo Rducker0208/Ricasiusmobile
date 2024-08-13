@@ -7,7 +7,7 @@ class database:
     def __init__(self):
 
         # // creates a connection to the database
-        self.connection = sqlite3.connect('highscores.db')
+        self.connection = sqlite3.connect('./highscores.db')
 
     def load_user(self, username: str) -> str:
         """function that loads a user's highscore from the database"""
@@ -19,8 +19,12 @@ class database:
         cursor.execute("SELECT * FROM highscores WHERE username=:username", {'username': username})
         result = cursor.fetchone()
 
-        # // if user doesn't exist in database add them and otherwise return their highscore
-        if not result:
+        cursor.execute("SELECT * FROM highscores")
+        print(cursor.fetchall())
+
+        # // if user doesn't exist in database add them (unless the name is None)
+        # // and otherwise return their highscore
+        if not result and username:
             cursor.execute("INSERT INTO highscores VALUES(:username, :score)",
                            {'username': username, 'score': 0})
             self.connection.commit()
@@ -31,12 +35,17 @@ class database:
     def update_user(self, username: str, score: int) -> None:
         """Function to update a user's highscore in the database if they surpass it"""
 
-        # // cursor is used to make requests to database
-        cursor = self.connection.cursor()
+        # // don't update database if user is none
+        if username and username != 'None':
+            # // cursor is used to make requests to database
+            cursor = self.connection.cursor()
 
-        cursor.execute("UPDATE highscores SET username=:username, score=:score WHERE username=:username",
-                       {'username': username, 'score': score})
-        self.connection.commit()
+            cursor.execute("UPDATE highscores SET username=:username, score=:score WHERE username=:username",
+                           {'username': username, 'score': score})
+
+            cursor.execute("SELECT * FROM highscores")
+            print(cursor.fetchall())
+            self.connection.commit()
 
 
 db = database()

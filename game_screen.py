@@ -5,6 +5,7 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 
 from database_class import db
+from game_over_screen import GameOverScreen
 from grape_class import grapes
 from hp_class import hp
 from joystick import Joystick
@@ -38,22 +39,32 @@ class GameScreen(Screen):
     def check_hp(self, dt) -> None: # noqa
         """Function that checks player's hp and stops game if player has no hp left"""
 
-        if player.hp <= 0:
-            player.hp = 5
-            music_client.stop_main_theme()
+        # // Screen only needs to be updated if game is going on
+        if self.manager.current == 'game':
+            if player.hp <= 0:
+                player.hp = 5
+                music_client.stop_main_theme()
 
-            if user.current_score > user.highscore:
-                user.highscore = user.current_score
-                db.update_user(user.username, user.highscore)
-                print('updated db')
+                self.manager.remove_widget(self.manager.get_screen(name='game_over'))
 
-            self.manager.current = 'game_over'
+                if user.current_score > int(user.highscore):
+                    user.highscore = user.current_score
+                    db.update_user(user.username, user.highscore)
+                    user.create_score_image(mode='highscore')
+                    widgets = GameOverScreen(True, name='game_over')
 
-        if self.counter == 200:
-            player.hp -= 1
-            self.counter = 0
-        else:
-            self.counter += 1
+                else:
+                    widgets = GameOverScreen(False, name='game_over')
+                    user.create_score_image(mode='current')
+
+                self.manager.add_widget(widgets)
+                self.manager.current = 'game_over'
+
+            if self.counter == 100:
+                player.hp -= 1
+                self.counter = 0
+            else:
+                self.counter += 1
 
 
 class game_screen_widgets(FloatLayout):

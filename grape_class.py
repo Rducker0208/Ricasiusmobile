@@ -41,7 +41,7 @@ class Grapes:
 
         grape = Image(source=f'./Resources/game_screen/grapes/grape_{self.rotation_direction}'
                              f'_{self.rotation_angle}_degrees.png', allow_stretch=True,
-                      size_hint=(.1, .1), pos_hint={'x': x_spawnpoint, 'y': y_spawnpoint})
+                      size_hint=(.15, .15), pos_hint={'x': x_spawnpoint, 'y': y_spawnpoint})
 
         self.grapes[self.grape_id] = grape
         screen.add_widget(grape)
