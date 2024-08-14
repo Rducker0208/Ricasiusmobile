@@ -18,7 +18,7 @@ package.domain = org.rducker
 source.dir = .
 
 # (list) Source files to include (leave empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,txt,db,mp3
+source.include_exts = py,png,jpg,kv,atlas,txt,db,mp3,ttf
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png

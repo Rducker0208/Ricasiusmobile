@@ -6,6 +6,7 @@ from kivy.uix.screenmanager import ScreenManager, NoTransition
 from game_over_screen import GameOverScreen
 from game_screen import GameScreen
 from login_screen import LoginScreen
+from music_client import music_client
 from start_screen import StartScreen
 from user_class import user
 
@@ -27,15 +28,13 @@ class RicasiusApp(App):
 
         # // Check if user should log in
         if not user.username:
-            print('1')
             self.sm.add_widget(LoginScreen(name='login'))
             self.sm.current = 'login'
         else:
-            print('2')
-            user.create_score_image(mode='highscore')
             self.sm.add_widget(StartScreen(name='start'))
             self.sm.current = 'start'
 
+        music_client.play_main_theme()
         return self.sm
 
 

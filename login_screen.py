@@ -35,7 +35,6 @@ class LoginScreen(Screen):
                 f.write(instance.text)
                 user.username = instance.text
                 user.highscore = db.load_user(user.username)
-                user.create_score_image(mode='highscore')
                 print(f'loaded highscore for {user.username}: {user.highscore}')
 
                 # // Readd start screen so highscore can be refreshed

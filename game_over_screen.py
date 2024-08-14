@@ -1,3 +1,4 @@
+from kivy.core.text import LabelBase
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
@@ -16,10 +17,13 @@ background_image = './Resources/game_over_screen/temple_bg.png'
 you_died_text = './Resources/game_over_screen/you_died.png'
 new_highscore_text = './Resources/game_over_screen/new-highscore.png'
 highscore_text = './Resources/game_over_screen/highscore_text.png'
-highscore = './Resources/game_over_screen/highscore.png'
 score_text = './Resources/game_over_screen/score_text.png'
-score = './Resources/game_over_screen/score.png'
 press_to_respawn_text = './Resources/game_over_screen/press_to_respawn.png'
+
+# // font
+# // font acquired from: https://www.dafont.com/minecrafter.font
+minecrafter_font = './Resources/fonts/Minecrafter.Reg.ttf'
+LabelBase.register(name='minecraft', fn_regular=minecrafter_font)
 
 
 class GameOverScreen(Screen):
@@ -56,7 +60,6 @@ class game_over_screen_widgets(FloatLayout):
 
     def __init__(self, new_highscore: bool, restart_game_button: Button, **kwargs):
         super(game_over_screen_widgets, self).__init__(**kwargs)
-        print(user.highscore)
 
         self.restart_game_button = restart_game_button
 
@@ -75,20 +78,21 @@ class game_over_screen_widgets(FloatLayout):
             self.add_widget(Image(source=new_highscore_text, allow_stretch=True,
                                   size_hint=(.6, .15), pos_hint={'x': .2, 'y': .6}))
 
-            self.add_widget(Label(text=str(user.highscore), font_size=192,
-                                  size_hint=(.6, .175), pos_hint={'x': .2, 'y': .4}))
+            self.add_widget(Label(text=str(user.highscore), font_name='minecraft', font_size=256,
+                                  outline_color=(255, 255, 255, 255), outline_width=4, color=(64, 75, 77, 1),
+                                  size_hint=(.8, .2), pos_hint={'x': 0.1, 'y': .3}))
 
         else:
             self.add_widget(Image(source=score_text, allow_stretch=True,
                                   size_hint=(.4, .125), pos_hint={'x': .3, 'y': .6}))
 
-            self.add_widget(Label(text=str(user.current_score), font_size=128,
-                                  size_hint=(.3, .15), pos_hint={'x': .35, 'y': .44}))
+            self.add_widget(Label(text=str(user.current_score), font_name='minecraft', font_size=128,
+                                  outline_color=(255, 255, 255, 255), outline_width=4, color=(64, 75, 77, 1),
+                                  size_hint=(.3, .15), pos_hint={'x': .35, 'y': .42}))
 
             self.add_widget(Image(source=highscore_text, allow_stretch=True,
                                   size_hint=(.4, .125), pos_hint={'x': .3, 'y': .3}))
 
-            self.add_widget(Label(text=str(user.highscore), font_size=128,
-                                  size_hint=(.3, .15), pos_hint={'x': .35, 'y': .15}))
-
-
+            self.add_widget(Label(text=str(user.highscore), font_name='minecraft', font_size=128,
+                                  outline_color=(255, 255, 255, 255), outline_width=4, color=(64, 75, 77, 1),
+                                  size_hint=(.3, .15), pos_hint={'x': .35, 'y': .12}))

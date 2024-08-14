@@ -4,6 +4,7 @@ from kivy.uix.screenmanager import Screen
 from player_class import player
 
 # // images used
+# // Images created on: https://pinetools.com/merge-images
 heart_dir = './Resources/game_screen/hearts'
 
 

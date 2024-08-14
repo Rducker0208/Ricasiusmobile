@@ -3,7 +3,9 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
+from kivy.uix.screenmanager import FadeTransition, NoTransition
 
+from attacks import AttackGrid
 from database_class import db
 from game_over_screen import GameOverScreen
 from grape_class import grapes
@@ -42,29 +44,30 @@ class GameScreen(Screen):
         # // Screen only needs to be updated if game is going on
         if self.manager.current == 'game':
             if player.hp <= 0:
-                player.hp = 5
                 music_client.stop_main_theme()
+                music_client.play_evil_laugh()
 
+                # // Update highscore information and load appropriate game over screen
                 self.manager.remove_widget(self.manager.get_screen(name='game_over'))
 
                 if user.current_score > int(user.highscore):
                     user.highscore = user.current_score
                     db.update_user(user.username, user.highscore)
-                    user.create_score_image(mode='highscore')
                     widgets = GameOverScreen(True, name='game_over')
 
                 else:
                     widgets = GameOverScreen(False, name='game_over')
-                    user.create_score_image(mode='current')
 
                 self.manager.add_widget(widgets)
+                self.manager.transition = FadeTransition()
                 self.manager.current = 'game_over'
-
-            if self.counter == 100:
-                player.hp -= 1
-                self.counter = 0
-            else:
-                self.counter += 1
+                self.manager.transition = NoTransition()
+            #
+            # if self.counter == 100:
+            #     player.hp -= 1
+            #     self.counter = 0
+            # else:
+            #     self.counter += 1
 
 
 class game_screen_widgets(FloatLayout):
@@ -72,6 +75,10 @@ class game_screen_widgets(FloatLayout):
 
     def __init__(self, **kwargs):
         super(game_screen_widgets, self).__init__(**kwargs)
+
+        self.attack_grid = None
+        self.attack_on_screen = False
+        self.frames_since_last_attack = 0
 
         # // joystick used to register player movement
         joystick = Joystick(
@@ -117,6 +124,61 @@ class game_screen_widgets(FloatLayout):
 
         # // update Zeus's position
         zeus.update_zeus(self)
+
+        # // update attack
+        if self.attack_on_screen is True:
+            if self.attack_grid.status == 'finished':
+                self.attack_on_screen = False
+                self.frames_since_last_attack = 0
+
+        else:
+            if self.frames_since_last_attack == 100:
+                self.attack_grid = AttackGrid()
+                self.add_widget(self.attack_grid)
+                self.attack_on_screen = True
+
+            else:
+                self.frames_since_last_attack += 1
+
+        # # // update attack
+        # if self.frames_since_attack_change == 100:
+        #     if self.attack_on_screen is True:
+        #         ...
+        #
+        #     else:
+        #         self.attack_grid = AttackGrid()
+        #         self.add_widget(self.attack_grid)
+        #         self.attack_on_screen = True
+        #
+        #     self.frames_since_attack_change = 0
+        #
+        # else:
+        #     if self.attack_on_screen is True:
+        #         self.attack_grid.update_attack()
+        #
+        #     self.frames_since_attack_change += 1
+        #
+        # if self.attack_on_screen:
+        #     self.attack_grid.update_attack_circles()
+        #
+        # elif self.frames_since_attack_change == 100:
+        #     self.attack_grid = AttackGrid()
+        #     self.add_widget(self.attack_grid)
+        #     self.attack_on_screen = True
+        #
+        # else:
+        #     self.frames_since_attack_change += 1
+        # #
+        # # // Update attack
+        # if self.frames_since_attack_change == 100:
+        #     self.frames_since_attack_change = 0
+        #     if self.attack_on_screen is False:
+
+        #     else:
+        #         self.remove_widget(self.attack_grid)
+        #         self.attack_on_screen = False
+        # else:
+        #     self.frames_since_attack_change += 1
 
 
 
