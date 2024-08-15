@@ -11,6 +11,7 @@ from user_class import user
 # // text acquired from: https://textcraft.net/
 background_image = './Resources/start_screen/temple_bg.png'
 highscore_text = './Resources/start_screen/highscore_text.png'
+settings_image = './Resources/start_screen/cog.png'
 ricasius_text = './Resources/start_screen/ricasius.png'
 battle_wz_text = './Resources/start_screen/battle_with_zeus.png'
 press_to_start_text = './Resources/start_screen/press_to_start.png'
@@ -30,11 +31,17 @@ class StartScreen(Screen):
         self.start_game_button = Button(background_color=(0, 0, 0, 0))
         self.start_game_button.bind(on_press=self.start_game)
 
-        self.add_widget(start_screen_widgets(self.start_game_button))
+        self.settings_menu_button = Button(background_normal=settings_image, background_down=settings_image,
+                                           disabled=True)
+
+        self.add_widget(start_screen_widgets(self.start_game_button, self.settings_menu_button))
 
 
     def start_game(self, instance) -> None:  # noqa
         self.manager.current = 'game'
+
+    def open_settings(self, instance) -> None: # noqa
+        self.manager.current = 'settings'
 
 
 class start_screen_widgets(FloatLayout):

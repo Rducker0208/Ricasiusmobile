@@ -27,7 +27,6 @@ class GameScreen(Screen):
 
     def __init__(self, **kwargs):
         super(GameScreen, self).__init__(**kwargs)
-        self.counter = 0
 
         widgets = game_screen_widgets()
         self.add_widget(widgets)
@@ -62,12 +61,6 @@ class GameScreen(Screen):
                 self.manager.transition = FadeTransition()
                 self.manager.current = 'game_over'
                 self.manager.transition = NoTransition()
-            #
-            # if self.counter == 100:
-            #     player.hp -= 1
-            #     self.counter = 0
-            # else:
-            #     self.counter += 1
 
 
 class game_screen_widgets(FloatLayout):
@@ -122,14 +115,13 @@ class game_screen_widgets(FloatLayout):
         # // update player location on screen
         player.update_player(self)
 
-        # // update Zeus's position
-        zeus.update_zeus(self)
-
         # // update attack
         if self.attack_on_screen is True:
             if self.attack_grid.status == 'finished':
                 self.attack_on_screen = False
                 self.frames_since_last_attack = 0
+            else:
+                self.attack_grid.update_attack_animation()
 
         else:
             if self.frames_since_last_attack == 100:
@@ -139,48 +131,6 @@ class game_screen_widgets(FloatLayout):
 
             else:
                 self.frames_since_last_attack += 1
-
-        # # // update attack
-        # if self.frames_since_attack_change == 100:
-        #     if self.attack_on_screen is True:
-        #         ...
-        #
-        #     else:
-        #         self.attack_grid = AttackGrid()
-        #         self.add_widget(self.attack_grid)
-        #         self.attack_on_screen = True
-        #
-        #     self.frames_since_attack_change = 0
-        #
-        # else:
-        #     if self.attack_on_screen is True:
-        #         self.attack_grid.update_attack()
-        #
-        #     self.frames_since_attack_change += 1
-        #
-        # if self.attack_on_screen:
-        #     self.attack_grid.update_attack_circles()
-        #
-        # elif self.frames_since_attack_change == 100:
-        #     self.attack_grid = AttackGrid()
-        #     self.add_widget(self.attack_grid)
-        #     self.attack_on_screen = True
-        #
-        # else:
-        #     self.frames_since_attack_change += 1
-        # #
-        # # // Update attack
-        # if self.frames_since_attack_change == 100:
-        #     self.frames_since_attack_change = 0
-        #     if self.attack_on_screen is False:
-
-        #     else:
-        #         self.remove_widget(self.attack_grid)
-        #         self.attack_on_screen = False
-        # else:
-        #     self.frames_since_attack_change += 1
-
-
 
 def get_joystick_input(joystick, pad) -> None: # noqa
     """Function to track current position of joystick to get player movement"""
