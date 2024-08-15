@@ -7,7 +7,7 @@ from kivy.uix.screenmanager import Screen
 
 from music_client import music_client
 from player_class import player
-from start_screen import StartScreen
+from .start_screen import StartScreen
 from user_class import user
 
 

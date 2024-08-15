@@ -4,8 +4,8 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
 
 from database_class import db
-from start_screen import StartScreen
 from user_class import user
+from .start_screen import StartScreen
 
 # // images used
 # // text acquired from: https://textcraft.net/

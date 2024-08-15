@@ -3,11 +3,8 @@ import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 
-from game_over_screen import GameOverScreen
-from game_screen import GameScreen
-from login_screen import LoginScreen
 from music_client import music_client
-from start_screen import StartScreen
+from Screens import LoginScreen, StartScreen, SetingsScreen, GameScreen, GameOverScreen
 from user_class import user
 
 kivy.require('2.3.0')

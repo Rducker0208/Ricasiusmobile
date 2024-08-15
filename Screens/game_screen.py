@@ -7,7 +7,6 @@ from kivy.uix.screenmanager import FadeTransition, NoTransition
 
 from attacks import AttackGrid
 from database_class import db
-from game_over_screen import GameOverScreen
 from grape_class import grapes
 from hp_class import hp
 from joystick import Joystick
@@ -15,6 +14,7 @@ from music_client import music_client
 from player_class import player
 from user_class import user
 from zeus_class import zeus
+from .game_over_screen import GameOverScreen
 
 # // Images used
 # // text acquired from: https://textcraft.net/
