@@ -3,11 +3,11 @@ import random
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 
-from player_class import player
 from user_class import user
+from .player_class import player
 
 # // Images used
-grape_image = './Resources/game_screen/grapes/grape_midle.png'
+grape_image = './Resources/game_screen/grapes/grape_middle.png'
 
 
 class Grapes:
@@ -39,9 +39,13 @@ class Grapes:
             else:
                 break
 
-        grape = Image(source=f'./Resources/game_screen/grapes/grape_{self.rotation_direction}'
-                             f'_{self.rotation_angle}_degrees.png', allow_stretch=True,
-                      size_hint=(.15, .15), pos_hint={'x': x_spawnpoint, 'y': y_spawnpoint})
+        if self.rotation_angle != 0:
+            grape = Image(source=f'./Resources/game_screen/grapes/grape_{self.rotation_direction}'
+                                 f'_{self.rotation_angle}_degrees.png', allow_stretch=True,
+                          size_hint=(.15, .15), pos_hint={'x': x_spawnpoint, 'y': y_spawnpoint})
+        else:
+            grape = Image(source=f'./Resources/game_screen/grapes/grape_middle.png', allow_stretch=True,
+                          size_hint=(.15, .15), pos_hint={'x': x_spawnpoint, 'y': y_spawnpoint})
 
         self.grapes[self.grape_id] = grape
         screen.add_widget(grape)
@@ -76,7 +80,7 @@ class Grapes:
 
         if self.rotation_angle == 0:
             for grape in self.grapes.values():
-                grape.source = './Resources/game_screen/grapes/grape_midle.png'
+                grape.source = './Resources/game_screen/grapes/grape_middle.png'
 
         else:
 

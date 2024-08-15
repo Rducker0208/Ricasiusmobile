@@ -5,21 +5,18 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from kivy.uix.screenmanager import FadeTransition, NoTransition
 
-from attacks import AttackGrid
+from Entities import AttackGrid, grapes, hp, player, zeus
+
 from database_class import db
-from grape_class import grapes
-from hp_class import hp
 from joystick import Joystick
 from music_client import music_client
-from player_class import player
 from user_class import user
-from zeus_class import zeus
 from .game_over_screen import GameOverScreen
 
 # // Images used
 # // text acquired from: https://textcraft.net/
 background_image = './Resources/game_screen/battle_background.png'
-grape_image = './Resources/game_screen/grapes/grape_midle.png'
+grape_image = './Resources/game_screen/grapes/grape_middle.png'
 
 
 class GameScreen(Screen):

@@ -5,10 +5,11 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 
+from Entities import player
+
 from music_client import music_client
-from player_class import player
-from .start_screen import StartScreen
 from user_class import user
+from .start_screen import StartScreen
 
 
 # // images used

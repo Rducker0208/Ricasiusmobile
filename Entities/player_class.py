@@ -4,7 +4,7 @@ from kivy.uix.screenmanager import Screen
 
 
 # // image directory
-player_images_dir = r'Resources/game_screen/player'
+player_images_dir = './Resources/game_screen/player'
 
 
 class Player:

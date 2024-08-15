@@ -8,12 +8,12 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 
 from music_client import music_client
-from player_class import player
+from .player_class import player
 
 # // images used
 red_circle = './Resources/game_screen/attacks/red_circle.png'
 red_cross = './Resources/game_screen/attacks/red_cross.png'
-lightning_dir = 'Resources/game_screen/lightning/'
+lightning_dir = '../Resources/game_screen/lightning/'
 
 joystick_area = [60, 61, 62, 63, 75, 76, 77, 78, 90, 91, 92, 93]
 

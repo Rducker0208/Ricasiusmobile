@@ -1,7 +1,7 @@
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 
-from player_class import player
+from .player_class import player
 
 # // images used
 # // Images created on: https://pinetools.com/merge-images
