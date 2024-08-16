@@ -15,7 +15,7 @@ from .start_screen import StartScreen
 # // images used
 # // text acquired from: https://textcraft.net/
 background_image = './Resources/game_over_screen/temple_bg.png'
-you_died_text = './Resources/game_over_screen/you_died.png'
+you_died_text = './Resources/game_over_screen/You-died.png'
 new_highscore_text = './Resources/game_over_screen/new-highscore.png'
 highscore_text = './Resources/game_over_screen/highscore_text.png'
 score_text = './Resources/game_over_screen/score_text.png'
@@ -51,9 +51,9 @@ class GameOverScreen(Screen):
         player.hp = 5
 
         # // Readd start screen so highscore can be refreshed
-        self.manager.remove_widget(self.manager.get_screen(name='start'))
         self.manager.add_widget(StartScreen(name='start'))
         self.manager.current = 'start'
+        self.manager.remove_widget(self.manager.get_screen(name='game_over'))
 
 
 class game_over_screen_widgets(FloatLayout):
@@ -77,7 +77,7 @@ class game_over_screen_widgets(FloatLayout):
         # // check which screen to display
         if new_highscore:
             self.add_widget(Image(source=new_highscore_text, allow_stretch=True,
-                                  size_hint=(.6, .15), pos_hint={'x': .2, 'y': .6}))
+                                  size_hint=(.4, .15), pos_hint={'x': .3, 'y': .6}))
 
             self.add_widget(Label(text=str(user.highscore), font_name='minecraft', font_size=256,
                                   outline_color=(255, 255, 255, 255), outline_width=4, color=(64, 75, 77, 1),

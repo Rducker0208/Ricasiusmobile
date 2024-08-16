@@ -7,6 +7,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
 from kivy.uix.label import Label
 
+from jnius import autoclass
 from music_client import music_client
 from .player_class import player
 
@@ -84,7 +85,18 @@ class AttackGrid(GridLayout):
         player_tile -= (15 - player_tile_x)
 
         if player_tile in self.attack_locations:
-            player.hp -= 1
+            player.hp -= 5
+
+            try:
+                PythonActivity = autoclass('org.kivy.android.PythonActivity')
+                Context = autoclass('android.content.Context')
+                activity = PythonActivity.mActivity
+                vibrator = activity.getSystemService(Context.VIBRATOR_SERVICE)
+                vibrator.vibrate(200)
+
+            except Exception as e:
+                print(e)
+
             return
 
     def update_attack_animation(self) -> None:

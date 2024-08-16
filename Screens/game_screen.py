@@ -25,30 +25,27 @@ class GameScreen(Screen):
     def __init__(self, **kwargs):
         super(GameScreen, self).__init__(**kwargs)
 
-        widgets = game_screen_widgets()
-        self.add_widget(widgets)
+        self.widgets = game_screen_widgets()
+        self.add_widget(self.widgets)
 
         # // check player hp and end game if player has no hp left
-        Clock.schedule_interval(self.check_hp, 0.0333)
+        Clock.schedule_interval(self.update_screen, 0.0333)
 
-        # // update screen in 30 fps
-        Clock.schedule_interval(widgets.update_screen, 0.033)
-
-    def check_hp(self, dt) -> None: # noqa
+    def update_screen(self, dt) -> None: # noqa
         """Function that checks player's hp and stops game if player has no hp left"""
 
         # // Screen only needs to be updated if game is going on
         if self.manager.current == 'game':
+            self.widgets.update_screen()
+
             if player.hp <= 0:
                 music_client.stop_main_theme()
                 music_client.play_evil_laugh()
 
                 # // Update highscore information and load appropriate game over screen
-                self.manager.remove_widget(self.manager.get_screen(name='game_over'))
-
                 if user.current_score > int(user.highscore):
                     user.highscore = user.current_score
-                    db.update_user(user.username, user.highscore)
+                    db.update_user_score(user.username, user.highscore)
                     widgets = GameOverScreen(True, name='game_over')
 
                 else:
@@ -97,7 +94,7 @@ class game_screen_widgets(FloatLayout):
         self.add_widget(player.player)
         self.add_widget(zeus.zeus)
 
-    def update_screen(self, dt) -> None: # noqa
+    def update_screen(self) -> None: # noqa
         """Function that gets called every 1/30th of a second (dt) to update all widgets"""
 
         # // update player hp

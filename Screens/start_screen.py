@@ -6,6 +6,7 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 
 from user_class import user
+from .settings_screen import SetingsScreen
 
 # // Images used
 # // text acquired from: https://textcraft.net/
@@ -42,10 +43,12 @@ class StartScreen(Screen):
         """Starts the main game"""
 
         self.manager.current = 'game'
+        self.manager.remove_widget(self.manager.get_screen(name='start'))
 
     def open_settings(self, instance) -> None: # noqa
         """Opens the settings menu"""
 
+        self.manager.add_widget(SetingsScreen(name='settings'))
         self.manager.current = 'settings'
 
 
@@ -67,8 +70,6 @@ class start_screen_widgets(FloatLayout):
                               outline_color=(255, 255, 255, 255), outline_width=4, color=(64, 75, 77, 1),
                               size_hint=(.2, .1), pos_hint={'x': 0.025, 'y': .75}))
 
-        self.add_widget(settings_button)
-
         self.add_widget(Image(source=ricasius_text, allow_stretch=True,
                               size_hint=(.6, .25), pos_hint={'x': .2, 'y': .7}))
 
@@ -79,3 +80,5 @@ class start_screen_widgets(FloatLayout):
                               size_hint=(.5, .15), pos_hint={'x': .24, 'y': .1}))
 
         self.add_widget(self.start_game_button)
+
+        self.add_widget(settings_button)
