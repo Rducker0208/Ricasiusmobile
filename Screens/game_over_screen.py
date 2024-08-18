@@ -70,7 +70,7 @@ class game_over_screen_widgets(FloatLayout):
                               size_hint=(.6, .2), pos_hint={'x': .2, 'y': .75}))
 
         self.add_widget(Image(source=press_to_respawn_text, allow_stretch=True,
-                              size_hint=(.5, .15), pos_hint={'x': .26, 'y': .001}))
+                              size_hint=(.5, .15), pos_hint={'x': .25, 'y': .001}))
 
         self.add_widget(self.restart_game_button)
 

@@ -29,10 +29,11 @@ class RicasiusApp(App):
             self.sm.add_widget(LoginScreen(name='login'))
             self.sm.current = 'login'
         else:
+            music_client.play_main_theme()
             self.sm.add_widget(StartScreen(name='start'))
+            self.sm.add_widget(LoginScreen(name='login'))
             self.sm.current = 'start'
 
-        music_client.play_main_theme()
         return self.sm
 
 

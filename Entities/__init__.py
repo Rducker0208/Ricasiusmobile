@@ -1,4 +1,4 @@
-from .attacks import AttackGrid
+from .attacks import attack
 from .grape_class import grapes
 from .hp_class import hp
 from .player_class import player

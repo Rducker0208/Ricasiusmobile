@@ -8,6 +8,9 @@ class database:
 
         # // creates a connection to the database
         self.connection = sqlite3.connect('./user_data.db')
+        # self.cursor = self.connection.cursor()
+        # self.cursor.execute("SELECT settings FROM user_data")
+        # print(self.cursor.fetchall())
 
     def load_user_info(self, username: str) -> tuple[str, str]:
         """Load user settings from the databse"""
@@ -23,13 +26,23 @@ class database:
         if user_info:
             return user_info[1:]
         else:
-            cursor.execute("INSERT INTO user_data VALUES(?, ?, ?)", (username, '0', '{}'))
+            cursor.execute("INSERT INTO user_data VALUES(?, ?, ?)", (username, '0',
+                                                                     '{"music_on": True, "sfx_on": True, "vibrations_on": True}'))
             self.connection.commit()
 
-            return '0', '{}'
+            return '0', '{"music_on": True, "sfx_on": True, "vibrations_on": True}'
 
-    def update_user_settings(self):
-        ...
+    def update_user_settings(self, username: str, new_settings: str) -> None:
+        """Update a user's settings in the database"""
+
+        # // cursor is used to make requests to database
+        cursor = self.connection.cursor()
+
+        # // update the user score in the database
+        cursor.execute(f"""UPDATE user_data SET settings=\"{new_settings}\" WHERE name='{username}'""")
+        self.connection.commit()
+
+        cursor.execute("SELECT * FROM user_data")
 
     def update_user_score(self, username: str, new_score: int):
         """Function to update a user's highscore in the database if they surpass it"""
@@ -43,8 +56,6 @@ class database:
             # // update the user score in the database
             cursor.execute(f"""UPDATE user_data SET highscore='{new_score}' WHERE name='{username}'""")
             self.connection.commit()
-
-            cursor.execute("SELECT * FROM user_data")
 
 
 db = database()

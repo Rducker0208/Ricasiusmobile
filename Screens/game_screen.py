@@ -1,3 +1,4 @@
+from jnius import autoclass
 from kivy.clock import Clock
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
@@ -5,9 +6,8 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from kivy.uix.screenmanager import FadeTransition, NoTransition
 
-from Entities import AttackGrid, grapes, hp, player, zeus
-
 from database_class import db
+from Entities import attack, grapes, hp, player, zeus
 from joystick import Joystick
 from music_client import music_client
 from user_class import user
@@ -31,7 +31,7 @@ class GameScreen(Screen):
         # // check player hp and end game if player has no hp left
         Clock.schedule_interval(self.update_screen, 0.0333)
 
-    def update_screen(self, dt) -> None: # noqa
+    def update_screen(self, dt) -> None:  # noqa
         """Function that checks player's hp and stops game if player has no hp left"""
 
         # // Screen only needs to be updated if game is going on
@@ -39,8 +39,10 @@ class GameScreen(Screen):
             self.widgets.update_screen()
 
             if player.hp <= 0:
-                music_client.stop_main_theme()
-                music_client.play_evil_laugh()
+                if user.user_settings['music_on'] is True:
+                    music_client.stop_main_theme(True)
+                else:
+                    music_client.play_evil_laugh()
 
                 # // Update highscore information and load appropriate game over screen
                 if user.current_score > int(user.highscore):
@@ -50,6 +52,20 @@ class GameScreen(Screen):
 
                 else:
                     widgets = GameOverScreen(False, name='game_over')
+
+                if user.user_settings['vibrations_on'] is True:
+                    try:
+                        PythonActivity = autoclass('org.kivy.android.PythonActivity')
+                        Context = autoclass('android.content.Context')
+                        activity = PythonActivity.mActivity
+                        vibrator = activity.getSystemService(Context.VIBRATOR_SERVICE)
+                        vibrator.vibrate(500)
+
+                    except Exception as e:
+                        if 'org/kivy/android/PythonActivity java.lang.NoClassDefFoundError' in str(e):
+                            pass
+                        else:
+                            print(e)
 
                 self.manager.add_widget(widgets)
                 self.manager.transition = FadeTransition()
@@ -63,7 +79,6 @@ class game_screen_widgets(FloatLayout):
     def __init__(self, **kwargs):
         super(game_screen_widgets, self).__init__(**kwargs)
 
-        self.attack_grid = None
         self.attack_on_screen = False
         self.frames_since_last_attack = 0
 
@@ -94,7 +109,7 @@ class game_screen_widgets(FloatLayout):
         self.add_widget(player.player)
         self.add_widget(zeus.zeus)
 
-    def update_screen(self) -> None: # noqa
+    def update_screen(self) -> None:  # noqa
         """Function that gets called every 1/30th of a second (dt) to update all widgets"""
 
         # // update player hp
@@ -111,22 +126,24 @@ class game_screen_widgets(FloatLayout):
 
         # // update attack
         if self.attack_on_screen is True:
-            if self.attack_grid.status == 'finished':
+            if attack.finished is True:
+                self.remove_widget(attack)
                 self.attack_on_screen = False
                 self.frames_since_last_attack = 0
-            else:
-                self.attack_grid.update_attack_animation()
 
         else:
-            if self.frames_since_last_attack == 100:
-                self.attack_grid = AttackGrid()
-                self.add_widget(self.attack_grid)
+            if self.frames_since_last_attack == 50:
+                self.add_widget(attack)
                 self.attack_on_screen = True
+                attack.draw_attack_circles(1, 6, 0.0)
+                attack.finished = False
 
             else:
                 self.frames_since_last_attack += 1
+                attack.add_attack_location()
 
-def get_joystick_input(joystick, pad) -> None: # noqa
+
+def get_joystick_input(joystick, pad) -> None:  # noqa
     """Function to track current position of joystick to get player movement"""
 
     # // pad[0] = x_axis
@@ -152,4 +169,3 @@ def get_joystick_input(joystick, pad) -> None: # noqa
     # // set player speed in relation to joystick position
     player.speed_x = round(x_direction, 2)
     player.speed_y = round(y_direction, 2)
-

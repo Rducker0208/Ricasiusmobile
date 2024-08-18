@@ -4,6 +4,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
 
 from database_class import db
+from music_client import music_client
 from user_class import user
 from .start_screen import StartScreen
 
@@ -48,8 +49,7 @@ class LoginScreen(Screen):
                 # // Readd start screen so highscore can be refreshed
                 self.manager.add_widget(StartScreen(name='start'))
                 self.manager.current = 'start'
-
-                self.manager.remove_widget(self.manager.get_screen(name='login'))
+                music_client.play_main_theme()
 
 
 class login_screen_widgets(FloatLayout):
