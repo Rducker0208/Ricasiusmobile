@@ -11,7 +11,7 @@ class Player:
     """Class that handles actions from player such as walking and placing the player on screen"""
 
     def __init__(self):
-        self.player = Image(source=f'{player_images_dir}/playerIdle1.png',
+        self.player = Image(source=f'{player_images_dir}/player_idle_right_1.png',
                             size_hint=(.1, .15), allow_stretch=True,
                             x=Window.size[0] // 2 - Window.size[0] // 20,
                             y=Window.size[1] // 2 - Window.size[1] // 10)
@@ -41,10 +41,11 @@ class Player:
                 self.frames_since_sprite_change = 0
 
                 # // Check if player animation is at its end, restart if needed
+                # self.player.source = f'{player_images_dir}/player_idle_1.png'
                 if self.player.source[-5] == '8':
-                    self.player.source = f'{player_images_dir}/playerIdle1.png'
+                    self.player.source = f'{player_images_dir}/player_idle_{self.x_axis}_1.png'
                 else:
-                    self.player.source = f'{player_images_dir}/playerIdle{int(self.player.source[-5]) + 1}.png'
+                    self.player.source = f'{player_images_dir}/player_idle_{self.x_axis}_{int(self.player.source[-5]) + 1}.png'
 
             else:
                 self.frames_since_sprite_change += 1
@@ -56,9 +57,10 @@ class Player:
 
                 # // Set correct image
                 if self.player.source[-5] == '8':
-                    self.player.source = f'{player_images_dir}/walk_{self.x_axis}_1.png'
+                    self.player.source = f'{player_images_dir}/player_walk_{self.x_axis}_1.png'
                 else:
-                    self.player.source = f'{player_images_dir}/walk_{self.x_axis}_{int(self.player.source[-5]) + 1}.png'
+                    self.player.source = \
+                        f'{player_images_dir}/player_walk_{self.x_axis}_{int(self.player.source[-5]) + 1}.png'
             else:
                 self.frames_since_sprite_change += 1
 

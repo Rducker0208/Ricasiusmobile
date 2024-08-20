@@ -192,8 +192,6 @@ def get_joystick_input(joystick, pad) -> None:  # noqa
         player.x_axis = 'right'
     elif x_direction < 0:
         player.x_axis = 'left'
-    else:
-        player.x_axis = None
 
     # // see if joystick is held up or down
     if y_direction > 0:
