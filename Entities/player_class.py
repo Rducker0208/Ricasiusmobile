@@ -12,7 +12,7 @@ class Player:
 
     def __init__(self):
         self.player = Image(source=f'{player_images_dir}/playerIdle1.png',
-                            size_hint={.1, .15}, allow_stretch=True,
+                            size_hint=(.1, .15), allow_stretch=True,
                             x=Window.size[0] // 2 - Window.size[0] // 20,
                             y=Window.size[1] // 2 - Window.size[1] // 10)
 
@@ -67,15 +67,38 @@ class Player:
                 if self.player.x < Window.size[0] - self.player.size[0] - 20:
                     self.player.x += self.base_speed * self.speed_x
             else:
-                if self.player.x > 20:
+
+                # // Check if player is not to close to the joystick
+                if self.player.y <= Window.size[1] / 2.8:
+                    if self.player.x > Window.size[0] / 4:
+                        self.player.x -= self.base_speed * (self.speed_x * -1)
+
+                # // Gets triggered if player is above the joystick on screen
+                elif self.player.x > 0:
                     self.player.x -= self.base_speed * (self.speed_x * -1)
 
             if self.y_axis == 'up':
-                if self.player.y < Window.size[1] - Window.size[1] // 2.2:
+                if self.player.y < Window.size[1] - Window.size[1] / 2.5:
                     self.player.y += self.base_speed * self.speed_y
             else:
-                if self.player.y > 20:
-                    self.player.y -= self.base_speed * (self.speed_y * -1)
+                # // Check if player is not to close to the joystick
+                if self.player.x <= Window.size[0] / 4:
+                    if self.player.y > Window.size[1] / 2.2:
+                        self.player.y -= self.base_speed * (self.speed_y * -1)
+                else:
+                    if self.player.y > 5:
+                        self.player.y -= self.base_speed * (self.speed_y * -1)
+
+
+
+
+                # # // Gets triggered if player is to the right of the joystick on screen
+                # elif self.player.y <= Window.size[1] / 5 + Window.size[1] // 15:
+                #     self.player.y -= self.base_speed * (self.speed_y * -1)
+
+                # if self.player.y  Window.size[1] / 2.8:
+                # if self.player.y > 20:
+                #     self.player.y -= self.base_speed * (self.speed_y * -1)
 
         screen.add_widget(self.player)
 

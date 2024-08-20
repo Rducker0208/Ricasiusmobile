@@ -11,6 +11,7 @@ from kivy.uix.image import Image
 from music_client import music_client
 from user_class import user
 from .player_class import player
+from .shield_class import shield
 
 # // images used
 transparent_image = './Resources/game_screen/attacks/transparent_image.png'
@@ -97,6 +98,9 @@ class AttackGrid(GridLayout):
 
         # // if the animation is on the final row and on the final animation then stop the attack
         if last_circle == 136:
+            if animation_frame == 1:
+                Clock.schedule_once(partial(self.check_for_player_damage, first_circle, last_circle), 0)
+
             if animation_frame == 7:
                 Clock.schedule_once(partial(self.clear_red_circles, 1, 6), 0.3)
             else:
@@ -131,9 +135,12 @@ class AttackGrid(GridLayout):
         if first_location <= player_tile <= last_location:
 
             # // Go through every location in the row to check if player is standing there
-            for location in range(first_location, last_location + 1):
-                if player_tile == location and location in self.attack_locations:
-                    player.hp -= 1
+            for location in range(first_location, last_location):
+                if player_tile == location and int(location) in self.attack_locations:
+                    if shield.shield_on_screen:
+                        shield.remove_shield()
+                    else:
+                        player.hp -= 1
 
                     if user.user_settings['vibrations_on'] is True:
                         try:

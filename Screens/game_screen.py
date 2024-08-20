@@ -1,3 +1,5 @@
+import random
+
 from jnius import autoclass
 from kivy.clock import Clock
 from kivy.uix.floatlayout import FloatLayout
@@ -7,11 +9,12 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.screenmanager import FadeTransition, NoTransition
 
 from database_class import db
-from Entities import attack, grapes, hp, player, zeus
+from Entities import attack, grapes, hp, LootVase, player, shield, speed_boots, zeus
 from joystick import Joystick
 from music_client import music_client
 from user_class import user
 from .game_over_screen import GameOverScreen
+
 
 # // Images used
 # // text acquired from: https://textcraft.net/
@@ -39,10 +42,7 @@ class GameScreen(Screen):
             self.widgets.update_screen()
 
             if player.hp <= 0:
-                if user.user_settings['music_on'] is True:
-                    music_client.stop_main_theme(True)
-                else:
-                    music_client.play_evil_laugh()
+                music_client.stop_main_theme(True, 0.0)
 
                 # // Update highscore information and load appropriate game over screen
                 if user.current_score > int(user.highscore):
@@ -79,8 +79,12 @@ class game_screen_widgets(FloatLayout):
     def __init__(self, **kwargs):
         super(game_screen_widgets, self).__init__(**kwargs)
 
+        self.loot_vaas = None
+        self.vase_on_screen = False
         self.attack_on_screen = False
         self.frames_since_last_attack = 0
+        self.power_up_on_screen = False
+        self.power_up = None
 
         # // joystick used to register player movement
         joystick = Joystick(
@@ -141,6 +145,39 @@ class game_screen_widgets(FloatLayout):
             else:
                 self.frames_since_last_attack += 1
                 attack.add_attack_location()
+
+        # // Update vase
+        # // Check if there should be a loot vase spawned
+        if self.vase_on_screen is False and self.power_up_on_screen is False:
+            if random.randint(1, 1000) == 1:
+                self.loot_vaas = LootVase(self)
+                self.vase_on_screen = True
+
+        # // If there is a vase on screen, check for colision
+        if self.vase_on_screen is True:
+            if self.loot_vaas.check_colision():
+                self.vase_on_screen = False
+
+                # // Randomly choose which power up should be spawned
+                if random.randint(1, 2) == 1:
+                    shield.draw_shield(self)
+                    self.power_up = 'shield'
+                else:
+                    speed_boots.draw_boots(self)
+                    speed_boots.active = True
+                    self.power_up = 'speed_boots'
+                self.power_up_on_screen = True
+
+        # // Update powerup
+        if shield.shield_on_screen is False and self.power_up_on_screen is True:
+
+            # // This condition gets triggered if the player loses hp and the shield is removed in the attack class
+            if self.power_up == 'shield':
+                self.power_up_on_screen = False
+
+            # // This condition gets triggered if the speed bots have run out
+            elif speed_boots.active is False:
+                self.power_up_on_screen = False
 
 
 def get_joystick_input(joystick, pad) -> None:  # noqa

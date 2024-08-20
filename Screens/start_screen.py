@@ -33,7 +33,7 @@ class StartScreen(Screen):
         self.start_game_button.bind(on_press=self.start_game)
 
         self.settings_menu_button = Button(background_normal=settings_image, background_down=settings_image,
-                                           size_hint=(.13, .25), pos_hint={'x': .82, 'y': .72})
+                                           size_hint=(.13, .28), pos_hint={'x': .82, 'y': .69})
         self.settings_menu_button.bind(on_press=self.open_settings)
 
         self.add_widget(start_screen_widgets(self.start_game_button, self.settings_menu_button))

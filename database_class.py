@@ -7,8 +7,8 @@ class database:
     def __init__(self):
 
         # // creates a connection to the database
-        self.connection = sqlite3.connect('./user_data.db')
-        # self.cursor = self.connection.cursor()
+        self.connection = sqlite3.connect('user_data.db')
+        self.cursor = self.connection.cursor()
         # self.cursor.execute("SELECT settings FROM user_data")
         # print(self.cursor.fetchall())
 
@@ -27,7 +27,7 @@ class database:
             return user_info[1:]
         else:
             cursor.execute("INSERT INTO user_data VALUES(?, ?, ?)", (username, '0',
-                                                                     '{"music_on": True, "sfx_on": True, "vibrations_on": True}'))
+                                                                     '{"music_volume": 1.00, "sfx_volume": 1.00, "vibrations_on": True}'))
             self.connection.commit()
 
             return '0', '{"music_on": True, "sfx_on": True, "vibrations_on": True}'

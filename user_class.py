@@ -14,8 +14,6 @@ class User:
             self.highscore = int(user_info[0])
             self.user_settings = eval(user_info[1])
 
-            print(self.highscore)
-
         self.current_score = 0
 
 

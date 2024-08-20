@@ -20,8 +20,8 @@ class Zeus:
     def start_animation(self) -> None:
         """Start an animation loop for Zeus"""
 
-        anim = (Animation(x=self.zeus.x + Window.size[0] // 8, y=self.zeus.y, duration=2) +
-                Animation(x=self.zeus.x - Window.size[0] // 8, y=self.zeus.y, duration=2))
+        anim = (Animation(x=self.zeus.x + Window.size[0] // 16, y=self.zeus.y, duration=1.5) +
+                Animation(x=self.zeus.x - Window.size[0] // 16, y=self.zeus.y, duration=1.5))
         anim.repeat = True
         anim.start(self.zeus)
 

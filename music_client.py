@@ -5,42 +5,47 @@ from kivy.core.audio import SoundLoader
 from user_class import user
 
 # // files used
-main_theme = './Resources/audio/main_theme.mp3'
 evil_laugh = './Resources/audio/zeus_evil_laugh.mp3'
+main_theme = './Resources/audio/main_theme.mp3'
+shield_breaking_sfx = './Resources/audio/shield_breaking.mp3'
 thunder_sfx = './Resources/audio/thunder.mp3'
+vase_breaking_sfx = './Resources/audio/vase_breaking.mp3'
 
 
 class MusicClient:
     """Class used to play music/sound effects"""
 
     def __init__(self):
+
+        # // If user is not logged in yet these get set upon login
+        try:
+            self.music_volume = user.user_settings['music_volume']
+            self.sfx_volume = user.user_settings['sfx_volume']
+        except TypeError:
+            self.music_volume = 0.0
+            self.sfx_volume = 0.0
+
         self.main_theme = SoundLoader.load(filename=main_theme)
         self.main_theme.loop = True
 
         self.evil_laugh = SoundLoader.load(filename=evil_laugh)
-        self.evil_laugh.loop = False
-        self.evil_laugh.volume = .5
-
+        self.shield_breaking_sfx = SoundLoader.load(filename=shield_breaking_sfx)
         self.thunder_sfx = SoundLoader.load(filename=thunder_sfx)
-        self.thunder_sfx.loop = False
-        self.thunder_sfx.volume = .7
-
-        self.event = None
+        self.vase_breaking_sfx = SoundLoader.load(filename=vase_breaking_sfx)
 
     def play_main_theme(self) -> None:
         """Starts playing main theme"""
 
-        if user.user_settings['music_on'] is True:
-            self.main_theme.volume = .5
-            self.main_theme.play()
+        self.main_theme.volume = self.music_volume
+        self.main_theme.play()
 
-    def stop_main_theme(self, play_laugh: bool) -> None:
-        """Stops playing main theme"""
+    def update_music_volume(self) -> None:
+        """Update main theme volume"""
 
-        self.event = Clock.schedule_interval(partial(self.lower_main_theme_volume, play_laugh), .05)
+        self.main_theme.volume = self.music_volume
 
-    def lower_main_theme_volume(self, play_laugh: bool, dt) -> None:
-        """Lowers the main theme volume by a little bit so the music fades out"""
+    def stop_main_theme(self, play_laugh: bool, dt: float) -> None:
+        """Slowly fade out main theme"""
 
         try:
             self.main_theme.volume -= 0.02
@@ -48,22 +53,35 @@ class MusicClient:
             self.main_theme.volume = 0
 
         if self.main_theme.volume <= 0:
-            self.event.cancel()
-
             if play_laugh:
                 self.play_evil_laugh()
+        else:
+            Clock.schedule_once(partial(self.stop_main_theme, play_laugh), .05)
 
     def play_evil_laugh(self) -> None:
         """Play demonic laugh"""
 
-        if user.user_settings['sfx_on'] is True:
-            self.evil_laugh.play()
+        self.evil_laugh.volume = self.sfx_volume
+        self.evil_laugh.play()
 
     def play_thunder_sfx(self) -> None:
         """Play thunder impact sound effect"""
 
-        if user.user_settings['sfx_on'] is True:
-            self.thunder_sfx.play()
+        self.thunder_sfx.volume = self.sfx_volume
+        self.thunder_sfx.play()
+
+    def play_vase_breaking_sfx(self) -> None:
+        """Play sound effect of a vase breaking"""
+
+        self.vase_breaking_sfx.volume = self.sfx_volume
+        self.vase_breaking_sfx.play()
+
+    def play_shield_breaking_sfx(self) -> None:
+        """Play sound effect of a shield breaking"""
+
+        self.shield_breaking_sfx.volume = self.sfx_volume
+        self.shield_breaking_sfx.play()
+
 
 
 music_client = MusicClient()

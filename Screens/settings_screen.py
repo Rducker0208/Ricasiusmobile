@@ -2,6 +2,7 @@ from kivy.core.text import LabelBase
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
+from kivy.uix.slider import Slider
 from kivy.uix.screenmanager import Screen
 from kivy.uix.switch import Switch
 
@@ -35,19 +36,30 @@ class SetingsScreen(Screen):
                                   size_hint=(.3, .4), pos_hint={'x': -.08, 'y': .65})
         last_page_button.bind(on_press=self.go_to_start)
 
-        # // Switch that controls wether or not to play music
-        if user.user_settings['music_on'] is True:
-            music_switch = Switch(active=True, size_hint=(.05, .05), pos_hint={'x': .47, 'y': .6})
-        else:
-            music_switch = Switch(active=False, size_hint=(.05, .05), pos_hint={'x': .47, 'y': .6})
-        music_switch.bind(active=switch_music_setting)
+        # // Slider that controls music volume
+        music_volume_slider = Slider(min=0, max=100, value=round(user.user_settings['music_volume'] * 100, 2),
+                                     size_hint=(.4, .05), pos_hint={'x': .3, 'y': .6})
+        music_volume_slider.bind(value=change_music_volume)
 
-        # // Switch that controls wether or not to play sound effects
-        if user.user_settings['sfx_on'] is True:
-            sfx_switch = Switch(active=True, size_hint=(.05, .05), pos_hint={'x': .47, 'y': .4})
-        else:
-            sfx_switch = Switch(active=False, size_hint=(.05, .05), pos_hint={'x': .47, 'y': .4})
-        sfx_switch.bind(active=switch_sfx_setting)
+        # // Slider that controls volume of sound effects
+        sfx_volume_slider = Slider(min=0, max=100, value=round(user.user_settings['sfx_volume'] * 100, 2),
+                                   size_hint=(.4, .05), pos_hint={'x': .3, 'y': .4})
+
+        sfx_volume_slider.bind(value=change_sfx_volume)
+
+        # # // Switch that controls wether or not to play music
+        # if user.user_settings['music_on'] is True:
+        #     music_switch = Switch(active=True, size_hint=(.05, .05), pos_hint={'x': .47, 'y': .6})
+        # else:
+        #     music_switch = Switch(active=False, size_hint=(.05, .05), pos_hint={'x': .47, 'y': .6})
+        # music_switch.bind(active=switch_music_setting)
+        #
+        # # // Switch that controls wether or not to play sound effects
+        # if user.user_settings['sfx_on'] is True:
+        #     sfx_switch = Switch(active=True, size_hint=(.05, .05), pos_hint={'x': .47, 'y': .4})
+        # else:
+        #     sfx_switch = Switch(active=False, size_hint=(.05, .05), pos_hint={'x': .47, 'y': .4})
+        # sfx_switch.bind(active=switch_sfx_setting)
 
         # // Switch that controls wether or not the device vibrates if available
         if user.user_settings['vibrations_on'] is True:
@@ -62,16 +74,16 @@ class SetingsScreen(Screen):
                                        size_hint=(.2, .1), pos_hint={'x': .4, 'y': .05})
         switch_account_button.bind(on_press=self.switch_account)
 
-        self.add_widget(SettingWidgets(last_page_button, music_switch, sfx_switch, vibrations_switch,
+        self.add_widget(SettingWidgets(last_page_button, music_volume_slider, sfx_volume_slider, vibrations_switch,
                                        switch_account_button))
 
-    def go_to_start(self, instance) -> None: # noqa
+    def go_to_start(self, instance) -> None:  # noqa
         """Go back to the start menu"""
 
         self.manager.current = 'start'
         self.manager.remove_widget(self.manager.get_screen(name='settings'))
 
-    def switch_account(self, instance) -> None: # noqa
+    def switch_account(self, instance) -> None:  # noqa
         """Opens the login screen so the player can log in under a different name"""
 
         self.manager.current = 'login'
@@ -114,27 +126,32 @@ class SettingWidgets(FloatLayout):
         self.add_widget(switch_account_button)
 
 
-def switch_music_setting(instance, switch_state) -> None: # noqa
-    """Turns off/on music depending on the user's old setting"""
+def change_music_volume(instance, new_volume) -> None:  # noqa
+    """Change the user's music volume"""
 
-    if user.user_settings['music_on'] is True:
-        user.user_settings['music_on'] = False
-        music_client.stop_main_theme(False)
-    else:
-        user.user_settings['music_on'] = True
-        music_client.play_main_theme()
+    # // Round down new volume to 2 digits after comma
+    new_volume = round(new_volume / 100, 2)
 
+    # // Update the user settings in both the music client and user settings
+    user.user_settings['music_volume'] = new_volume
+    music_client.music_volume = new_volume
+    music_client.update_music_volume()
+
+    # // Update the user database to include the new volume
     db.update_user_settings(user.username, str(user.user_settings))
 
 
-def switch_sfx_setting(instance, switch_state) -> None:  # noqa
-    """Turns off/on sound effects depending on the user's old setting"""
+def change_sfx_volume(instance, new_volume) -> None:  # noqa
+    """Change the user's music volume"""
 
-    if user.user_settings['sfx_on'] is True:
-        user.user_settings['sfx_on'] = False
-    else:
-        user.user_settings['sfx_on'] = True
+    # // Round down new volume to 2 digits after comma
+    new_volume = round(new_volume / 100, 2)
 
+    # // Update the user settings in both the music client and user settings
+    user.user_settings['sfx_volume'] = new_volume
+    music_client.sfx_volume = new_volume
+
+    # // Update the user database to include the new volume
     db.update_user_settings(user.username, str(user.user_settings))
 
 
