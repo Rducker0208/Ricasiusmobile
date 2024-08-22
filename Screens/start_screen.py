@@ -13,6 +13,7 @@ from .settings_screen import SetingsScreen
 background_image = './Resources/start_screen/temple_bg.png'
 highscore_text = './Resources/start_screen/highscore_text.png'
 settings_image = './Resources/start_screen/cog.png'
+trophy_image = './Resources/start_screen/trophy.png'
 ricasius_text = './Resources/start_screen/ricasius.png'
 battle_wz_text = './Resources/start_screen/battle_with_zeus.png'
 press_to_start_text = './Resources/start_screen/press_to_start.png'
@@ -32,11 +33,16 @@ class StartScreen(Screen):
         self.start_game_button = Button(background_color=(0, 0, 0, 0))
         self.start_game_button.bind(on_press=self.start_game)
 
+        self.leaderboard_button = Button(background_normal=trophy_image, background_down=trophy_image,
+                                         size_hint=(.13, .25), pos_hint={'x': .745, 'y': .74})
+        self.leaderboard_button.bind(on_press=self.open_leaderboard)
+
         self.settings_menu_button = Button(background_normal=settings_image, background_down=settings_image,
-                                           size_hint=(.13, .28), pos_hint={'x': .82, 'y': .69})
+                                           size_hint=(.13, .25), pos_hint={'x': .86, 'y': .74})
         self.settings_menu_button.bind(on_press=self.open_settings)
 
-        self.add_widget(start_screen_widgets(self.start_game_button, self.settings_menu_button))
+        self.add_widget(start_screen_widgets(self.leaderboard_button,
+                                             self.start_game_button, self.settings_menu_button))
 
 
     def start_game(self, instance) -> None:  # noqa
@@ -51,15 +57,17 @@ class StartScreen(Screen):
         self.manager.add_widget(SetingsScreen(name='settings'))
         self.manager.current = 'settings'
 
+    def open_leaderboard(self, instance) -> None: # noqa
+        """Open the leaderboard menu"""
+
+        self.manager.current = 'leaderboard'
+
 
 class start_screen_widgets(FloatLayout):
     """Class that contains all widgets for the startscreen"""
 
-    def __init__(self, start_game_button: Button,  settings_button: Button, **kwargs) -> None:
+    def __init__(self, leaderboard_button: Button, start_game_button: Button,  settings_button: Button, **kwargs) -> None:
         super(start_screen_widgets, self).__init__(**kwargs)
-
-        self.start_game_button = start_game_button
-        self.settings_button = settings_button
 
         self.add_widget(Image(source=background_image, allow_stretch=True, keep_ratio=False))
 
@@ -79,6 +87,6 @@ class start_screen_widgets(FloatLayout):
         self.add_widget(Image(source=press_to_start_text, allow_stretch=True,
                               size_hint=(.5, .15), pos_hint={'x': .24, 'y': .1}))
 
-        self.add_widget(self.start_game_button)
-
+        self.add_widget(start_game_button)
+        self.add_widget(leaderboard_button)
         self.add_widget(settings_button)

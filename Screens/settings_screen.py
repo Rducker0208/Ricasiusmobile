@@ -47,20 +47,6 @@ class SetingsScreen(Screen):
 
         sfx_volume_slider.bind(value=change_sfx_volume)
 
-        # # // Switch that controls wether or not to play music
-        # if user.user_settings['music_on'] is True:
-        #     music_switch = Switch(active=True, size_hint=(.05, .05), pos_hint={'x': .47, 'y': .6})
-        # else:
-        #     music_switch = Switch(active=False, size_hint=(.05, .05), pos_hint={'x': .47, 'y': .6})
-        # music_switch.bind(active=switch_music_setting)
-        #
-        # # // Switch that controls wether or not to play sound effects
-        # if user.user_settings['sfx_on'] is True:
-        #     sfx_switch = Switch(active=True, size_hint=(.05, .05), pos_hint={'x': .47, 'y': .4})
-        # else:
-        #     sfx_switch = Switch(active=False, size_hint=(.05, .05), pos_hint={'x': .47, 'y': .4})
-        # sfx_switch.bind(active=switch_sfx_setting)
-
         # // Switch that controls wether or not the device vibrates if available
         if user.user_settings['vibrations_on'] is True:
             vibrations_switch = Switch(active=True, size_hint=(.05, .05), pos_hint={'x': .47, 'y': .2})
@@ -116,7 +102,7 @@ class SettingWidgets(FloatLayout):
         self.add_widget(self.music_switch)
 
         self.add_widget(Image(source=sound_effects_text, allow_stretch=True,
-                              size_hint=(.25, .1), pos_hint={'x': .375, 'y': .48}))
+                              size_hint=(.4, .12), pos_hint={'x': .3, 'y': .46}))
         self.add_widget(self.sfx_switch)
 
         self.add_widget(Image(source=vibrations_text, allow_stretch=True,

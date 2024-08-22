@@ -18,7 +18,7 @@ from .game_over_screen import GameOverScreen
 
 # // Images used
 # // text acquired from: https://textcraft.net/
-background_image = './Resources/game_screen/battle_background.png'
+background_image = './Resources/game_screen/new_map_3.png'
 grape_image = './Resources/game_screen/grapes/grape_middle.png'
 
 

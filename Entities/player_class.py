@@ -72,7 +72,7 @@ class Player:
 
                 # // Check if player is not to close to the joystick
                 if self.player.y <= Window.size[1] / 2.8:
-                    if self.player.x > Window.size[0] / 4:
+                    if self.player.x > Window.size[0] / 6:
                         self.player.x -= self.base_speed * (self.speed_x * -1)
 
                 # // Gets triggered if player is above the joystick on screen
@@ -84,24 +84,14 @@ class Player:
                     self.player.y += self.base_speed * self.speed_y
             else:
                 # // Check if player is not to close to the joystick
-                if self.player.x <= Window.size[0] / 4:
-                    if self.player.y > Window.size[1] / 2.2:
+                if self.player.x <= Window.size[0] / 6.4:
+                    if self.player.y > Window.size[1] / 2.5:
                         self.player.y -= self.base_speed * (self.speed_y * -1)
                 else:
                     if self.player.y > 5:
                         self.player.y -= self.base_speed * (self.speed_y * -1)
 
-
-
-
-                # # // Gets triggered if player is to the right of the joystick on screen
-                # elif self.player.y <= Window.size[1] / 5 + Window.size[1] // 15:
-                #     self.player.y -= self.base_speed * (self.speed_y * -1)
-
-                # if self.player.y  Window.size[1] / 2.8:
-                # if self.player.y > 20:
-                #     self.player.y -= self.base_speed * (self.speed_y * -1)
-
         screen.add_widget(self.player)
+
 
 player = Player()

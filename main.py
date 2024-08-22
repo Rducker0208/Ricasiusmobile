@@ -4,7 +4,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 
 from music_client import music_client
-from Screens import LoginScreen, StartScreen, GameScreen
+from Screens import LeaderboardScreen, LoginScreen, StartScreen, GameScreen
 from user_class import user
 
 kivy.require('2.3.0')
@@ -22,6 +22,7 @@ class RicasiusApp(App):
     def build(self) -> ScreenManager:
         """Build the screenmanager and initialise the app"""
 
+        self.sm.add_widget(LeaderboardScreen(name='leaderboard'))
         self.sm.add_widget(GameScreen(name='game'))
 
         # // Check if user should log in
