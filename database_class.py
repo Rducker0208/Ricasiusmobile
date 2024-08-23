@@ -30,7 +30,7 @@ class database:
                                                                      '{"music_volume": 1.00, "sfx_volume": 1.00, "vibrations_on": True}'))
             self.connection.commit()
 
-            return '0', '{"music_on": True, "sfx_on": True, "vibrations_on": True}'
+            return '0', '{"music_volume": 1.00, "sfx_volume": 1.00, "vibrations_on": True}'
 
     def update_user_settings(self, username: str, new_settings: str) -> None:
         """Update a user's settings in the database"""

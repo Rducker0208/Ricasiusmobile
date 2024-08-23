@@ -1,11 +1,8 @@
 import json
-import os
 import requests
 
-from dotenv import load_dotenv
-
-load_dotenv()
-scoreboard_id = os.getenv("SCOREBOARD_ID")
+with open('./scoreboard_id.txt', 'r') as f:
+    scoreboard_id = f.read()
 
 
 class ScoreBoard:
