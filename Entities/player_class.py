@@ -8,7 +8,7 @@ player_images_dir = './Resources/game_screen/player'
 
 
 class Player:
-    """Class that handles actions from player such as walking and placing the player on screen"""
+    """Class that handles actions from player such as walking and drawing the player sprite on screen"""
 
     def __init__(self):
         self.player = Image(source=f'{player_images_dir}/player_idle_right_1.png',
@@ -45,7 +45,7 @@ class Player:
                 if self.player.source[-5] == '8':
                     self.player.source = f'{player_images_dir}/player_idle_{self.x_axis}_1.png'
                 else:
-                    self.player.source = f'{player_images_dir}/player_idle_{self.x_axis}_{int(self.player.source[-5]) + 1}.png'
+                    self.player.source = f'{player_images_dir}/player_idle_{self.x_axis}_{int(self.player.source[-5]) + 1}.png' # noqa
 
             else:
                 self.frames_since_sprite_change += 1

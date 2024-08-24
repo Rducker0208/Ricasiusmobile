@@ -23,7 +23,7 @@ class LootVase:
     def draw_vase(self) -> None:
         """Draw the vase on the screen"""
 
-        # // while loop to avoid vase spawning inside the joystick
+        # // While loop to avoid vase spawning inside the joystick
         while True:
             x_spawnpoint = random.uniform(0, .9)
             y_spawnpoint = random.uniform(0, .63)
@@ -46,4 +46,3 @@ class LootVase:
             return True
         else:
             return False
-

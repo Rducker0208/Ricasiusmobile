@@ -7,7 +7,8 @@ zeus_image = r'./Resources/game_screen/zeus.png'
 
 
 class Zeus:
-    """Class that handles everything related to Zeus"""
+    """Class that contains Zeus, the antagonist at the top of the screen, this class handles his animation and
+     adding him to the screen."""
 
     def __init__(self):
         self.zeus = Image(source=zeus_image, allow_stretch=True,

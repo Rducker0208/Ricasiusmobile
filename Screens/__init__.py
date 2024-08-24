@@ -1,4 +1,4 @@
-from .leaderbord_screen import LeaderboardScreen
+from .leaderboard_screen import LeaderboardScreen
 from .login_screen import LoginScreen
 from .start_screen import StartScreen
 from .settings_screen import SetingsScreen

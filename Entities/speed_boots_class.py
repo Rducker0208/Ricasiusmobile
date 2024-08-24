@@ -10,7 +10,8 @@ speed_boots_image = './Resources/game_screen/loot_vase/speed_boots.png'
 
 
 class SpeedBoots:
-    """Class containing speed boots, a powerup that grants the player 1.5 times their speed for 15 seconds"""
+    """A powerup obtained via a lootvase, upon obtaining this powerup the player is granted 1.5x their original speed
+    for a duration of 15 seconds."""
 
     def __init__(self):
 
@@ -30,11 +31,13 @@ class SpeedBoots:
 
         self.root_widget = root_widget
 
+        # // Add the time label and the shoes themselves
         self.time_left = 15
         self.time_left_lable.text = str(self.time_left)
         self.root_widget.add_widget(self.speed_shoes)
         self.root_widget.add_widget(self.time_left_lable)
 
+        # // Set a clock event to update the shoe timer every second
         self.update_loop = Clock.schedule_interval(self.update_time_left, 1)
         Clock.schedule_once(self.remove_boots, 15)
 
@@ -51,7 +54,7 @@ class SpeedBoots:
         player.base_speed /= 1.5
 
     def update_time_left(self, dt) -> None: # noqa
-        """Update the time left lable"""
+        """Update the time left label"""
 
         self.time_left -= 1
         self.time_left_lable.text = str(self.time_left)

@@ -33,14 +33,17 @@ class LoginScreen(Screen):
 
         if instance.text:
 
+            username = instance.text.replace("'", '')
+            username = username.replace('"', '')
+
             # // load user info from username
             with open('username.txt', 'w') as f:
 
                 # // save new username to username file
-                f.write(instance.text)
+                f.write(username)
 
                 # // save user info
-                user.username = instance.text
+                user.username = username
                 user_info = db.load_user_info(user.username)
                 user.highscore = int(user_info[0])
                 user.user_settings = eval(user_info[1])

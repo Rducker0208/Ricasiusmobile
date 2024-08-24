@@ -1,5 +1,6 @@
 import random
 
+import requests.exceptions
 from jnius import autoclass
 from kivy.clock import Clock
 from kivy.uix.floatlayout import FloatLayout
@@ -9,7 +10,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.screenmanager import FadeTransition, NoTransition
 
 from database_class import db
-from Entities import attack, grapes, hp, LootVase, player, shield, speed_boots, zeus
+from Entities import attack, grapes, hp, LeaderBoard, LootVase, player, shield, speed_boots, zeus
 from joystick import Joystick
 from music_client import music_client
 from user_class import user
@@ -46,11 +47,13 @@ class GameScreen(Screen):
 
                 # // Update highscore information and load appropriate game over screen
                 if user.current_score > int(user.highscore):
+                    new_hs = True
                     user.highscore = user.current_score
                     db.update_user_score(user.username, user.highscore)
                     widgets = GameOverScreen(True, name='game_over')
 
                 else:
+                    new_hs = False
                     widgets = GameOverScreen(False, name='game_over')
 
                 if user.user_settings['vibrations_on'] is True:
@@ -71,6 +74,14 @@ class GameScreen(Screen):
                 self.manager.transition = FadeTransition()
                 self.manager.current = 'game_over'
                 self.manager.transition = NoTransition()
+
+                # // This is done later so that the transition doesn't take long to start
+                if new_hs:
+                    try:
+                        LeaderBoard().update_leaderboard(user.username, user.current_score)
+                    except requests.exceptions.ConnectionError:
+                        pass
+
 
 
 class game_screen_widgets(FloatLayout):

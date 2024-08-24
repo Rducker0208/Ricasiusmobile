@@ -6,6 +6,7 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 
 from user_class import user
+from .leaderboard_screen import LeaderboardScreen
 from .settings_screen import SetingsScreen
 
 # // Images used
@@ -60,6 +61,7 @@ class StartScreen(Screen):
     def open_leaderboard(self, instance) -> None: # noqa
         """Open the leaderboard menu"""
 
+        self.manager.add_widget(LeaderboardScreen(name='leaderboard'))
         self.manager.current = 'leaderboard'
 
 

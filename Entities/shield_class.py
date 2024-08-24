@@ -8,6 +8,9 @@ shield_image = './Resources/game_screen/loot_vase/shield.png'
 
 
 class Shield:
+    """A powerup obtained via a lootvase, this powerup grants the player invisibility for the next attack that hits them
+    after this the shield dissapears."""
+
     def __init__(self):
         self.root_widget: FloatLayout | None = None
         self.shield = Image(source=shield_image, allow_stretch=True,

@@ -27,7 +27,7 @@ source.include_exts = py,png,jpg,kv,atlas,txt,db,mp3,ttf
 #source.exclude_exts = spec
 
 # (list) List of directory to exclude (leave empty to not exclude anything)
-source.exclude_dirs = tests, bin, venv, Ricassius
+source.exclude_dirs = tests, bin, venv
 
 # (list) List of exclusions using pattern matching
 # Do not prefix with './'

@@ -4,7 +4,6 @@ from functools import partial
 from jnius import autoclass
 from kivy.clock import Clock
 from kivy.core.window import Window
-from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
 
@@ -24,26 +23,29 @@ blacklisted_tiles = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 
 
 
 class AttackGrid(GridLayout):
-    """Class that creates a grid with labals and red circles indicating incoming lightning bolts"""
+    """Class that creates a 15x9 grid consisting of labels and red circles indicating the strike locations of
+     the incoming lightning attack, later the red circles get replaced with the lightning"""
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+        # // Grid layout setup
         self.cols = 15
         self.rows = 9
         self.orientation = 'lr-tb'
 
         self.finished = False
 
-        # // variables for attack grid
+        # // Variables for attack grid
         self.attack_locations = set()
 
-        # // variables for attack circles
+        # // Variables for attack circles
         self.circle_opacity = 0
 
-        # // variables for lightning attack
+        # // Variables for lightning attack
         self.lightning_animation_frame = 1
 
+        # // This grid gets pre-created and is not used until the attack starts
         self.create_attack_grid()
 
 

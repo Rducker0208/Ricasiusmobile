@@ -11,7 +11,8 @@ grape_image = './Resources/game_screen/grapes/grape_middle.png'
 
 
 class Grapes:
-    """class that handles the grapes that give points"""
+    """Class that creates an image portraying a grape, this class controls the spawning off the grape
+     and the deletion of it. Upon collision with the player, grant them 1 point and delete the touched grape."""
 
     def __init__(self):
         self.grapes_on_screen: int = 0
@@ -39,6 +40,7 @@ class Grapes:
             else:
                 break
 
+        # // Set the correct image to allign with the rest of the grapes
         if self.rotation_angle != 0:
             grape = Image(source=f'./Resources/game_screen/grapes/grape_{self.rotation_direction}'
                                  f'_{self.rotation_angle}_degrees.png', allow_stretch=True,

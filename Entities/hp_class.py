@@ -9,14 +9,14 @@ heart_dir = './Resources/game_screen/hearts'
 
 
 class Hp:
-    """Class used to keep track of player hp and draw hearts on screen to indicate this"""
+    """Class used to keep track of the player's hp and display the according sprite on screen"""
 
     def __init__(self):
         self.hearts = Image(source=f'{heart_dir}/5_hp.png', allow_stretch=True,
                             size_hint=(.2, .1), pos_hint={'x': .01, 'y': .9})
 
     def update_hp(self, screen: Screen) -> None:
-        """Function that updates healthbar"""
+        """Function that updates the hp sprite"""
 
         screen.remove_widget(self.hearts)
         self.hearts.source = f'{heart_dir}/{player.hp}_hp.png'
