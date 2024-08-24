@@ -26,18 +26,21 @@ LabelBase.register(name='minecraft', fn_regular=minecrafter_font)
 
 
 class StartScreen(Screen):
-    """Class used to display the startscreen"""
+    """Screen used to enter the game and display the user's highscore aswell as other options"""
 
     def __init__(self, **kwargs):
         super(StartScreen, self).__init__(**kwargs)
 
+        # // Button to start the game
         self.start_game_button = Button(background_color=(0, 0, 0, 0))
         self.start_game_button.bind(on_press=self.start_game)
 
+        # // Button to open the leaderboard
         self.leaderboard_button = Button(background_normal=trophy_image, background_down=trophy_image,
                                          size_hint=(.13, .25), pos_hint={'x': .745, 'y': .74})
         self.leaderboard_button.bind(on_press=self.open_leaderboard)
 
+        # // Button to open the settings
         self.settings_menu_button = Button(background_normal=settings_image, background_down=settings_image,
                                            size_hint=(.13, .25), pos_hint={'x': .86, 'y': .74})
         self.settings_menu_button.bind(on_press=self.open_settings)
@@ -66,13 +69,14 @@ class StartScreen(Screen):
 
 
 class start_screen_widgets(FloatLayout):
-    """Class that contains all widgets for the startscreen"""
+    """This layout contains all the graphical aspects of the widgets that are actually shown on this screen"""
 
     def __init__(self, leaderboard_button: Button, start_game_button: Button,  settings_button: Button, **kwargs) -> None:
         super(start_screen_widgets, self).__init__(**kwargs)
 
         self.add_widget(Image(source=background_image, allow_stretch=True, keep_ratio=False))
 
+        # // Text displayed on screen
         self.add_widget(Image(source=highscore_text, allow_stretch=True,
                               size_hint=(.2, .1), pos_hint={'x': 0.03, 'y': .85}))
 
@@ -89,6 +93,7 @@ class start_screen_widgets(FloatLayout):
         self.add_widget(Image(source=press_to_start_text, allow_stretch=True,
                               size_hint=(.5, .15), pos_hint={'x': .24, 'y': .1}))
 
+        # // Buttons to open other screens
         self.add_widget(start_game_button)
         self.add_widget(leaderboard_button)
         self.add_widget(settings_button)

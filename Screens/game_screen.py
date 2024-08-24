@@ -1,13 +1,12 @@
 import random
-
 import requests.exceptions
+
 from jnius import autoclass
 from kivy.clock import Clock
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 from kivy.uix.label import Label
-from kivy.uix.screenmanager import Screen
-from kivy.uix.screenmanager import FadeTransition, NoTransition
+from kivy.uix.screenmanager import FadeTransition, NoTransition, Screen
 
 from database_class import db
 from Entities import attack, grapes, hp, LeaderBoard, LootVase, player, shield, speed_boots, zeus
@@ -24,7 +23,7 @@ grape_image = './Resources/game_screen/grapes/grape_middle.png'
 
 
 class GameScreen(Screen):
-    """Class used to display the game itself"""
+    """Class that displays the screen used in the actual battle with Zeus"""
 
     def __init__(self, **kwargs):
         super(GameScreen, self).__init__(**kwargs)
@@ -36,7 +35,7 @@ class GameScreen(Screen):
         Clock.schedule_interval(self.update_screen, 0.0333)
 
     def update_screen(self, dt) -> None:  # noqa
-        """Function that checks player's hp and stops game if player has no hp left"""
+        """Function that checks player's hp and stops the game if player has no hp left"""
 
         # // Screen only needs to be updated if game is going on
         if self.manager.current == 'game':
@@ -50,12 +49,14 @@ class GameScreen(Screen):
                     new_hs = True
                     user.highscore = user.current_score
                     db.update_user_score(user.username, user.highscore)
-                    widgets = GameOverScreen(True, name='game_over')
+                    game_over_widgets = GameOverScreen(True, name='game_over')
 
                 else:
                     new_hs = False
-                    widgets = GameOverScreen(False, name='game_over')
+                    game_over_widgets = GameOverScreen(False, name='game_over')
 
+                # // Try vibrating the current device,
+                # // if the current device does not posess a vibrator pass this code
                 if user.user_settings['vibrations_on'] is True:
                     try:
                         PythonActivity = autoclass('org.kivy.android.PythonActivity')
@@ -70,7 +71,8 @@ class GameScreen(Screen):
                         else:
                             print(e)
 
-                self.manager.add_widget(widgets)
+                # // Add the game over screen to the screenmanager and switch to it
+                self.manager.add_widget(game_over_widgets)
                 self.manager.transition = FadeTransition()
                 self.manager.current = 'game_over'
                 self.manager.transition = NoTransition()
@@ -83,21 +85,23 @@ class GameScreen(Screen):
                         pass
 
 
-
 class game_screen_widgets(FloatLayout):
-    """Class that contains all widgets used to display the game"""
+    """This layout contains all the graphical aspects of the widgets that are actually shown on this screen"""
 
     def __init__(self, **kwargs):
         super(game_screen_widgets, self).__init__(**kwargs)
 
-        self.loot_vaas = None
+        # // Variables used for controling powerups
+        self.loot_vase = None
+        self.power_up = None
         self.vase_on_screen = False
+        self.power_up_on_screen = False
+
+        # // Variables used for controling attacks
         self.attack_on_screen = False
         self.frames_since_last_attack = 0
-        self.power_up_on_screen = False
-        self.power_up = None
 
-        # // joystick used to register player movement
+        # // Joystick used to register player movement
         joystick = Joystick(
             sticky=False,
             size_hint=(.4, .4),
@@ -105,18 +109,18 @@ class game_screen_widgets(FloatLayout):
         )
         joystick.bind(pad=get_joystick_input)
 
-        # // grape image and score label to keep track of player score
+        # // Grape image and score label to keep track of player score
         self.score_grape = Image(source=grape_image, allow_stretch=True,
                                  size_hint=(.07, .1), pos_hint={'x': -0.005, 'y': .81})
 
         self.score_label = Label(text=str(user.current_score), font_size=64, color='black',
                                  size_hint=(.1, .1), pos_hint={'x': .03, 'y': .81})
 
-        # // add background
+        # // Add background
         self.add_widget(Image(source=background_image,
                               allow_stretch=True, keep_ratio=False))
 
-        # // add all widgets created above and other classes
+        # // Add all widgets that are created above, also add all the remaining classes
         self.add_widget(joystick)
         self.add_widget(self.score_grape)
         self.add_widget(self.score_label)
@@ -125,21 +129,21 @@ class game_screen_widgets(FloatLayout):
         self.add_widget(zeus.zeus)
 
     def update_screen(self) -> None:  # noqa
-        """Function that gets called every 1/30th of a second (dt) to update all widgets"""
+        """Function that gets called every 1/30th of a second to update all widgets"""
 
-        # // update player hp
+        # // Update player hp
         hp.update_hp(self)
 
-        # // update label to show player their current score
+        # // Update label to show player their current score
         self.score_label.text = str(user.current_score)
 
-        # // remove grapes if player is touching them and update player score
+        # // Remove grapes if player is touching them and update player score
         grapes.update_grapes(self)
 
-        # // update player location on screen
+        # // Update player location on screen
         player.update_player(self)
 
-        # // update attack
+        # // Update attack
         if self.attack_on_screen is True:
             if attack.finished is True:
                 self.remove_widget(attack)
@@ -161,12 +165,12 @@ class game_screen_widgets(FloatLayout):
         # // Check if there should be a loot vase spawned
         if self.vase_on_screen is False and self.power_up_on_screen is False:
             if random.randint(1, 1000) == 1:
-                self.loot_vaas = LootVase(self)
+                self.loot_vase = LootVase(self)
                 self.vase_on_screen = True
 
         # // If there is a vase on screen, check for colision
         if self.vase_on_screen is True:
-            if self.loot_vaas.check_colision():
+            if self.loot_vase.check_colision():
                 self.vase_on_screen = False
 
                 # // Randomly choose which power up should be spawned
@@ -192,19 +196,19 @@ class game_screen_widgets(FloatLayout):
 
 
 def get_joystick_input(joystick, pad) -> None:  # noqa
-    """Function to track current position of joystick to get player movement"""
+    """Function to track current position of joystick to control player movement"""
 
     # // pad[0] = x_axis
     # // pad[1] = y_axis
     x_direction, y_direction = pad
 
-    # // see if joystick is held to left or to the right
+    # // Check if joystick is held to left or to the right
     if x_direction > 0:
         player.x_axis = 'right'
     elif x_direction < 0:
         player.x_axis = 'left'
 
-    # // see if joystick is held up or down
+    # // Check if joystick is held up or down
     if y_direction > 0:
         player.y_axis = 'up'
     elif y_direction < 0:
@@ -212,6 +216,6 @@ def get_joystick_input(joystick, pad) -> None:  # noqa
     else:
         player.y_axis = None
 
-    # // set player speed in relation to joystick position
+    # // Set player speed based on how far the joystick is from the center of its platform
     player.speed_x = round(x_direction, 2)
     player.speed_y = round(y_direction, 2)

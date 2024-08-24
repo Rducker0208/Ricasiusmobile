@@ -17,7 +17,8 @@ required_once_text = './Resources/login_screen/required-once-per-update.png'
 
 
 class LoginScreen(Screen):
-    """Class that handles the screen in which player's on non-windows need to log in upon first login"""
+    """Screen containing a username textbox that users need to fill in when they log in for the first time or
+     when they want to switch accounts"""
 
     def __init__(self, **kwargs):
         super(LoginScreen, self).__init__(**kwargs)
@@ -39,10 +40,10 @@ class LoginScreen(Screen):
             # // load user info from username
             with open('username.txt', 'w') as f:
 
-                # // save new username to username file
+                # // Save new username to username file
                 f.write(username)
 
-                # // save user info
+                # // Save user info
                 user.username = username
                 user_info = db.load_user_info(user.username)
                 user.highscore = int(user_info[0])
@@ -57,7 +58,7 @@ class LoginScreen(Screen):
 
 
 class login_screen_widgets(FloatLayout):
-    """Class containing all widgets for login screen"""
+    """This layout contains all the graphical aspects of the widgets that are actually shown on this screen"""
     
     def __init__(self, username_textbox, **kwargs):
         super(login_screen_widgets, self).__init__(**kwargs)

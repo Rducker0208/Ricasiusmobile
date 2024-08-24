@@ -28,36 +28,40 @@ LabelBase.register(name='minecraft', fn_regular=minecrafter_font)
 
 
 class GameOverScreen(Screen):
-    """Class that handles the screen displayed on death of the player"""
+    """
+    Screen that is displayed upon the death of the player, this screen features 2 styles:
+    1: A new highscore was reached
+    2: The user did not surpass their previous record
+    """
 
     def __init__(self, new_highscore: bool, **kwargs):
         super(GameOverScreen, self).__init__(**kwargs)
-        self.new_highscore = new_highscore
-        self.game_end = True
 
+        # // Button used to restart the game
         self.restart_game_button = Button(background_color=(0, 0, 0, 0))
         self.restart_game_button.bind(on_press=self.restart_game)
 
-        # // Images only need to be added when the game ends
-        if self.game_end:
-            self.add_widget(game_over_screen_widgets(self.new_highscore, self.restart_game_button))
+        self.add_widget(game_over_screen_widgets(new_highscore, self.restart_game_button))
 
 
     def restart_game(self, instance) -> None: # noqa
-        """Function that reset's game variables so the game can restart"""
+        """Function that restarts the game, this function also sets all the variables that need to be reset
+         so the game can function on reset"""
 
+        # // Reset needed variables
         music_client.play_main_theme()
         user.current_score = 0
         player.hp = 5
 
-        # // Readd start screen so highscore can be refreshed
+        # // Add the start screen back to the screenmanager,
+        # // this resets the widgets on the start screen so the highscore is refreshed
         self.manager.add_widget(StartScreen(name='start'))
         self.manager.current = 'start'
         self.manager.remove_widget(self.manager.get_screen(name='game_over'))
 
 
 class game_over_screen_widgets(FloatLayout):
-    """Class containing all widgets for game over screen"""
+    """This layout contains all the graphical aspects of the widgets that are actually shown on this screen"""
 
     def __init__(self, new_highscore: bool, restart_game_button: Button, **kwargs):
         super(game_over_screen_widgets, self).__init__(**kwargs)
@@ -74,7 +78,7 @@ class game_over_screen_widgets(FloatLayout):
 
         self.add_widget(self.restart_game_button)
 
-        # // check which screen to display
+        # // check which screen to display, see the styles in the docstring of the GameOverScreen class
         if new_highscore:
             self.add_widget(Image(source=new_highscore_text, allow_stretch=True,
                                   size_hint=(.4, .15), pos_hint={'x': .3, 'y': .6}))

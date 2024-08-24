@@ -2,8 +2,8 @@ from kivy.core.text import LabelBase
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
-from kivy.uix.slider import Slider
 from kivy.uix.screenmanager import Screen
+from kivy.uix.slider import Slider
 from kivy.uix.switch import Switch
 
 from database_class import db
@@ -26,12 +26,12 @@ LabelBase.register(name='minecraft', fn_regular=minecrafter_font)
 
 
 class SetingsScreen(Screen):
-    """Class that is used to display and update the user's settings"""
+    """Screen that shows the user's current settings and sliders/switches allowing the user to change them"""
 
     def __init__(self, **kwargs):
         super(SetingsScreen, self).__init__(**kwargs)
 
-        # // button that goes back to log in screen
+        # // Button that goes back to log in screen
         last_page_button = Button(background_normal=arrow_left, background_down=arrow_left,
                                   size_hint=(.3, .4), pos_hint={'x': -.08, 'y': .65})
         last_page_button.bind(on_press=self.go_to_start)
@@ -78,17 +78,12 @@ class SetingsScreen(Screen):
 
 
 class SettingWidgets(FloatLayout):
-    """Class that comtains all the widgets for the settings screen"""
+    """This layout contains all the graphical aspects of the widgets that are actually shown on this screen"""
 
-    def __init__(self, last_page_button, music_switch, sfx_switch, vibrations_switch, switch_account_button,
-                 **kwargs):
+    def __init__(self, last_page_button: Button, music_slider: Slider, sfx_slider: Slider, vibrations_switch: Switch,
+                 switch_account_button: Button, **kwargs):
+
         super(SettingWidgets, self).__init__(**kwargs)
-
-        self.last_page_button = last_page_button
-        self.music_switch = music_switch
-        self.sfx_switch = sfx_switch
-        self.vibrations_switch = vibrations_switch
-        self.switch_account_button = switch_account_button
 
         self.add_widget(Image(source=background_image, allow_stretch=True, keep_ratio=False))
 
@@ -97,18 +92,22 @@ class SettingWidgets(FloatLayout):
 
         self.add_widget(last_page_button)
 
+        # // Music volume setting text and slider
         self.add_widget(Image(source=music_text, allow_stretch=True,
                               size_hint=(.25, .1), pos_hint={'x': .375, 'y': .68}))
-        self.add_widget(self.music_switch)
+        self.add_widget(music_slider)
 
+        # // Sfx volume setting text and slider
         self.add_widget(Image(source=sound_effects_text, allow_stretch=True,
                               size_hint=(.4, .12), pos_hint={'x': .3, 'y': .46}))
-        self.add_widget(self.sfx_switch)
+        self.add_widget(sfx_slider)
 
+        # // Vibrations text and switch
         self.add_widget(Image(source=vibrations_text, allow_stretch=True,
                               size_hint=(.25, .1), pos_hint={'x': .375, 'y': .28}))
-        self.add_widget(self.vibrations_switch)
+        self.add_widget(vibrations_switch)
 
+        # // Button to switch accounts
         self.add_widget(switch_account_button)
 
 
@@ -144,9 +143,11 @@ def change_sfx_volume(instance, new_volume) -> None:  # noqa
 def switch_vibration_setting(instance, switch_state) -> None:  # noqa
     """Turns off/on vibrations depending on the user's old setting"""
 
+    # // Check if vibrations should be turned on/off
     if user.user_settings['vibrations_on'] is True:
         user.user_settings['vibrations_on'] = False
     else:
         user.user_settings['vibrations_on'] = True
 
+    # // Update the database
     db.update_user_settings(user.username, str(user.user_settings))
