@@ -3,9 +3,13 @@ import kivy
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, NoTransition
 
-from music_client import music_client
 from Screens import LoginScreen, StartScreen, GameScreen
 from user_class import user
+
+try:
+    from music_client import music_client
+except:
+    user.user_has_speakers = False
 
 kivy.require('2.3.0')
 

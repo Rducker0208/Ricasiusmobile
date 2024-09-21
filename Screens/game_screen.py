@@ -42,7 +42,8 @@ class GameScreen(Screen):
             self.widgets.update_screen()
 
             if player.hp <= 0:
-                music_client.stop_main_theme(True, 0.0)
+                if user.user_has_speakers:
+                    music_client.stop_main_theme(True, 0.0)
 
                 # // Update highscore information and load appropriate game over screen
                 if user.current_score > int(user.highscore):

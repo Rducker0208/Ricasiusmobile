@@ -4,6 +4,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 
 from music_client import music_client
+from user_class import user
 from .player_class import player
 
 # // images used
@@ -41,7 +42,8 @@ class LootVase:
         """Check if the player is coliding with the vase so a powerup can be spawned"""
 
         if abs(player.player.x - self.vase.x) < 50 and abs(player.player.y - self.vase.y) < 50:
-            music_client.play_vase_breaking_sfx()
+            if user.user_has_speakers:
+                music_client.play_vase_breaking_sfx()
             self.root_widget.remove_widget(self.vase)
             return True
         else:

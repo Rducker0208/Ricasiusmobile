@@ -9,6 +9,7 @@ class User:
         self.username = get_username()
         self.user_id = None
         self.user_settings = None
+        self.user_has_speakers = True
         self.highscore = None
 
         # // If the user is logged in load their data

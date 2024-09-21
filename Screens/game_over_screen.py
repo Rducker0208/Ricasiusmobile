@@ -49,7 +49,8 @@ class GameOverScreen(Screen):
          so the game can function on reset"""
 
         # // Reset needed variables
-        music_client.play_main_theme()
+        if user.user_has_speakers:
+            music_client.play_main_theme()
         user.current_score = 0
         player.hp = 5
 

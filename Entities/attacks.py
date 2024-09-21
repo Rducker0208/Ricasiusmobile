@@ -118,7 +118,8 @@ class AttackGrid(GridLayout):
                 Clock.schedule_once(partial(self.check_for_player_damage, first_circle, last_circle), 0)
 
                 if first_circle == 1:
-                    music_client.play_thunder_sfx()
+                    if user.user_has_speakers:
+                        music_client.play_thunder_sfx()
 
             Clock.schedule_once(partial(self.draw_lightning, first_circle + 15, last_circle + 15,
                                         animation_frame), 0)

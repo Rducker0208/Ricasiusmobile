@@ -48,13 +48,15 @@ class LoginScreen(Screen):
                 user_info = db.load_user_info(user.username)
                 user.highscore = int(user_info[0])
                 user.user_settings = eval(user_info[1])
-                music_client.music_volume = user.user_settings['music_volume']
-                music_client.sfx_volume = user.user_settings['sfx_volume']
+                if user.user_has_speakers:
+                    music_client.music_volume = user.user_settings['music_volume']
+                    music_client.sfx_volume = user.user_settings['sfx_volume']
 
                 # // Readd start screen so highscore can be refreshed
                 self.manager.add_widget(StartScreen(name='start'))
                 self.manager.current = 'start'
-                music_client.play_main_theme()
+                if user.user_has_speakers:
+                    music_client.play_main_theme()
 
 
 class login_screen_widgets(FloatLayout):
