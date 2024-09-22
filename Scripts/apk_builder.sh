@@ -12,6 +12,7 @@
 # line 87: Change mv command folder
 # line 93/96: Change gdrive --parent id and file path
 
+# test
 echo -e "\e[35mStarting bash script..."
 
 echo -e "\e[39mRework, major or minor version:"
