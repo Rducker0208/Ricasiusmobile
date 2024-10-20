@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # // color codes found on:
 # https://misc.flogisoft.com/bash/tip_colors_and_formatting
@@ -39,64 +39,80 @@ echo -e "\e[35mconfirmed, starting build"
 true > username.txt
 
 # // use buildozer to create a new apk
-buildozer -v android debug
+buildozer -v -y android debug
 
 echo -e "\e[35mfinished conversion, resuming script"
 
-# // use ls command with -At flag to find the file created before the new file for versioning
-new_file=$(ls -At /bin | sed -n 2p)
-
-# // strip filename to get preset, rework, major and minor version
-IFS="." read -r rework major minor <<< "$new_file"
-# shellcheck disable=SC2034
-IFS="-" read -r preset rework <<< "$rework"
-minor=${minor%.*}
-
-if [ $update_type = "rework" ]; then
-rework="$(($rework + 1))"
-major="0"
-minor="0"
-fi
-
-if [ $update_type = "major" ]; then
-major="$(($major + 1))"
-minor="0"
-fi
-
-if [ $update_type = "minor" ]; then
-minor="$(($minor + 1))"
-fi
-
-# // create new file name
-new_file_name="Ricasius-$rework.$major.$minor"
-echo -e "\e[36mcreated new file:\n$new_file_name"
-
-# // delete oldest file in folder to make sure only 3 apks are saved at a time
-oldest_file=`ls -rt /bin | sed -n 1p`
-oldest_file=${oldest_file%.*}
-
-rm /mnt/c/users/ducke/PycharmProjects/Ricassiusmobile/bin/${oldest_file}.apk
-echo -e "\e[36mdeleted old file:\n$oldest_file.apk"
+echo -e "\e[35mfiles in bin:"
+ls bin
 
 # // find the newly created file and remove it's .apk extension
-new_file=`ls -t /bin | sed -n 1p`
+new_file=`ls -t bin | sed -n 1p`
 new_file=${new_file%.*}
 
 echo -e "\e[36mfound new created file:\n$new_file.apk"
-echo -e "\e[36mmoving content from $new_file to $new_file_name"
+#echo -e "\e[36mmoving content from $new_file to $new_file_name"
 
-mv /bin/${new_file}.apk /bin/${new_file_name}.apk
+# // use ls command with -At flag to find the file created before the new file for versioning
+#new_file=$(ls -At /bin | sed -n 2p)
 
-echo -e "\e[35mfinished building, starting upload to google drive\e[36m"
-# echo -e "\e[36m"
+# // strip filename to get preset, rework, major and minor version
+#IFS="." read -r rework major minor <<< "$new_file"
+# shellcheck disable=SC2034
+#IFS="-" read -r preset rework <<< "$rework"
+#minor=${minor%.*}
+
+#if [ $update_type = "rework" ]; then
+#rework="$(($rework + 1))"
+#major="0"
+#minor="0"
+#fi
+
+#if [ $update_type = "major" ]; then
+#major="$(($major + 1))"
+#minor="0"
+#fi
+
+#if [ $update_type = "minor" ]; then
+#minor="$(($minor + 1))"
+#fi
+
+# // create new file name
+#new_file_name="Ricasius-$rework.$major.$minor"
+#echo -e "\e[36mcreated new file:\n$new_file_name"
+
+# // delete oldest file in folder to make sure only 3 apks are saved at a time
+#oldest_file=`ls -rt /bin | sed -n 1p`
+#oldest_file=${oldest_file%.*}
+
+#rm /mnt/c/users/ducke/PycharmProjects/Ricassiusmobile/bin/${oldest_file}.apk
+#echo -e "\e[36mdeleted old file:\n$oldest_file.apk"
+
+# // find the newly created file and remove it's .apk extension
+#new_file=`ls -t /bin | sed -n 1p`
+#new_file=${new_file%.*}
+
+#echo -e "\e[36mfound new created file:\n$new_file.apk"
+#echo -e "\e[36mmoving content from $new_file to $new_file_name"
+
+#mv /bin/${new_file}.apk /bin/${new_file_name}.apk
+
+#echo -e "\e[35mfinished building, starting upload to git and github\e[36m"
+#echo -e "\e[36m"
+
+#echo -e "\e[35mfiles in git bin:"
+#git ls-files --directory bin
 
 # // use gdrive to upload file to google drive account
-gdrive files upload --parent 1mkUFETSJyXnsq-OwK7aRZVoOfMaMFwy6 /bin/${new_file_name}.apk
+#gdrive files upload --parent 1mkUFETSJyXnsq-OwK7aRZVoOfMaMFwy6 /bin/${new_file_name}.apk
 
 # // get file info of oldest file in google drive directory and delete it
-file_info=`gdrive files list --parent 1mkUFETSJyXnsq-OwK7aRZVoOfMaMFwy6 | sed -n 5p`
-IFS=" " read -r id unneeded_info <<< "$file_info"
+#file_info=`gdrive files list --parent 1mkUFETSJyXnsq-OwK7aRZVoOfMaMFwy6 | sed -n 5p`
+#IFS=" " read -r id unneeded_info <<< "$file_info"
 
-gdrive files delete $id
+#gdrive files delete $id
 
-echo -e "\e[35mfinished process"
+#echo -e "\e[35mfinished process"
+
+echo -e "end script: "
+read -r update_type
